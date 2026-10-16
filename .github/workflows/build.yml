@@ -1,0 +1,22 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build app
+        run: dotnet build src/WetWare.App -c Release
+
+      - name: Test core
+        run: dotnet test tests/WetWare.Core.Tests -c Release --verbosity normal

@@ -1,0 +1,73 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Surfaces -->
+    <Color x:Key="Bg0Color">#070B16</Color>
+    <Color x:Key="Bg1Color">#0B1120</Color>
+    <Color x:Key="SurfaceColor">#101829</Color>
+    <Color x:Key="Surface2Color">#152036</Color>
+    <Color x:Key="Surface3Color">#1B2944</Color>
+    <Color x:Key="BorderColor">#1F2C49</Color>
+    <Color x:Key="BorderStrongColor">#2C3D63</Color>
+
+    <!-- Text -->
+    <Color x:Key="TextColor">#E8EDF8</Color>
+    <Color x:Key="TextMutedColor">#97A3C2</Color>
+    <Color x:Key="TextFaintColor">#5F6C8E</Color>
+
+    <!-- Accents -->
+    <Color x:Key="AccentColor">#22D3EE</Color>
+    <Color x:Key="AccentSoftColor">#1A22D3EE</Color>
+    <Color x:Key="Accent2Color">#A78BFA</Color>
+    <Color x:Key="ExcitatoryColor">#FB7185</Color>
+    <Color x:Key="InhibitoryColor">#38BDF8</Color>
+    <Color x:Key="SuccessColor">#34D399</Color>
+    <Color x:Key="WarningColor">#FBBF24</Color>
+    <Color x:Key="DangerColor">#F43F5E</Color>
+
+    <SolidColorBrush x:Key="Bg0Brush" Color="{StaticResource Bg0Color}" />
+    <SolidColorBrush x:Key="Bg1Brush" Color="{StaticResource Bg1Color}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}" />
+    <SolidColorBrush x:Key="Surface2Brush" Color="{StaticResource Surface2Color}" />
+    <SolidColorBrush x:Key="Surface3Brush" Color="{StaticResource Surface3Color}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
+    <SolidColorBrush x:Key="BorderStrongBrush" Color="{StaticResource BorderStrongColor}" />
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
+    <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMutedColor}" />
+    <SolidColorBrush x:Key="TextFaintBrush" Color="{StaticResource TextFaintColor}" />
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="{StaticResource AccentSoftColor}" />
+    <SolidColorBrush x:Key="Accent2Brush" Color="{StaticResource Accent2Color}" />
+    <SolidColorBrush x:Key="ExcitatoryBrush" Color="{StaticResource ExcitatoryColor}" />
+    <SolidColorBrush x:Key="InhibitoryBrush" Color="{StaticResource InhibitoryColor}" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}" />
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}" />
+    <SolidColorBrush x:Key="HoverBrush" Color="#0FFFFFFF" />
+    <SolidColorBrush x:Key="PressedBrush" Color="#1AFFFFFF" />
+
+    <LinearGradientBrush x:Key="AccentGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#22D3EE" />
+        <GradientStop Offset="1" Color="#A78BFA" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="HeroGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#13213F" />
+        <GradientStop Offset="0.55" Color="#0E1730" />
+        <GradientStop Offset="1" Color="#1A1440" />
+    </LinearGradientBrush>
+
+    <RadialGradientBrush x:Key="WindowGlowBrush" Center="0.15,0" GradientOrigin="0.15,0" RadiusX="0.9" RadiusY="0.7">
+        <GradientStop Offset="0" Color="#1522D3EE" />
+        <GradientStop Offset="1" Color="#00000000" />
+    </RadialGradientBrush>
+
+    <FontFamily x:Key="UiFont">Segoe UI Variable Text, Segoe UI</FontFamily>
+    <FontFamily x:Key="DisplayFont">Segoe UI Variable Display, Segoe UI</FontFamily>
+    <FontFamily x:Key="MonoFont">Cascadia Mono, Consolas</FontFamily>
+    <FontFamily x:Key="MathFont">Cambria Math, Cambria</FontFamily>
+    <FontFamily x:Key="IconFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+
+    <CornerRadius x:Key="CardRadius">14</CornerRadius>
+    <CornerRadius x:Key="ControlRadius">8</CornerRadius>
+</ResourceDictionary>

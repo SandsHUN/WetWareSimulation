@@ -1,0 +1,130 @@
+<UserControl x:Class="WetWare.App.Views.StdpLabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:WetWare.App.Localization"
+             xmlns:c="clr-namespace:WetWare.App.Controls"
+             xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="320" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE945;" Title="{loc:Tr Common.Examples}" Tip="{loc:Tr Stdp.Examples.Tip}" />
+                        <WrapPanel>
+                            <Button Content="{loc:Tr Stdp.Preset.Causal}" ToolTip="{loc:Tr Stdp.Preset.Causal.Tip}" Command="{Binding ApplyPresetCommand}"
+                                    CommandParameter="Causal" Margin="0,0,6,6" Padding="10,5" FontSize="12" />
+                            <Button Content="{loc:Tr Stdp.Preset.AntiCausal}" ToolTip="{loc:Tr Stdp.Preset.AntiCausal.Tip}" Command="{Binding ApplyPresetCommand}"
+                                    CommandParameter="AntiCausal" Margin="0,0,6,6" Padding="10,5" FontSize="12" />
+                            <Button Content="{loc:Tr Stdp.Preset.Distant}" ToolTip="{loc:Tr Stdp.Preset.Distant.Tip}" Command="{Binding ApplyPresetCommand}"
+                                    CommandParameter="Distant" Margin="0,0,6,6" Padding="10,5" FontSize="12" />
+                            <Button Content="{loc:Tr Stdp.Preset.Random}" ToolTip="{loc:Tr Stdp.Preset.Random.Tip}" Command="{Binding ApplyPresetCommand}"
+                                    CommandParameter="Random" Margin="0,0,6,6" Padding="10,5" FontSize="12" />
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE916;" Title="{loc:Tr Stdp.Protocol}" Tip="{loc:Tr Stdp.Protocol.Tip}" />
+                        <c:ParamSlider Label="{loc:Tr Stdp.DeltaT}" Tip="{loc:Tr Stdp.DeltaT.Tip}" Value="{Binding DeltaT}"
+                                       Minimum="-50" Maximum="50" Step="1" Unit="ms" Decimals="0" />
+                        <c:ParamSlider Label="{loc:Tr Stdp.Jitter}" Tip="{loc:Tr Stdp.Jitter.Tip}" Value="{Binding Jitter}"
+                                       Minimum="0" Maximum="10" Step="0.5" Unit="ms" Decimals="1" />
+                        <c:ParamSlider Label="{loc:Tr Stdp.Rate}" Tip="{loc:Tr Stdp.Rate.Tip}" Value="{Binding PairingsPerSecond}"
+                                       Minimum="0.5" Maximum="20" Step="0.5" Unit="/s" Decimals="1" />
+                        <CheckBox Content="{loc:Tr Stdp.Random}" IsChecked="{Binding RandomTiming}" ToolTip="{loc:Tr Stdp.Random.Tip}" Margin="0,4,0,10" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource PrimaryButton}" Command="{Binding ToggleRunCommand}" ToolTip="{loc:Tr Common.PlayPause.Tip}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,8,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="&#xE768;" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                                        <Setter Property="Text" Value="&#xE769;" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Text="{loc:Tr Stdp.Run}" />
+                                </StackPanel>
+                            </Button>
+                            <Button Content="{loc:Tr Stdp.PairOnce}" ToolTip="{loc:Tr Stdp.PairOnce.Tip}" Command="{Binding PairOnceCommand}" Margin="6,0,0,0" />
+                            <Button Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ResetCommand}" ToolTip="{loc:Tr Common.Reset.Tip}" Margin="6,0,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr Stdp.Rule}" Tip="{loc:Tr Stdp.Rule.Tip}" />
+                        <c:ParamSlider Label="A+" Tip="{loc:Tr Param.APlus.Tip}" Value="{Binding APlus}" Minimum="0" Maximum="0.06" Step="0.001" Decimals="3" />
+                        <c:ParamSlider Label="A−" Tip="{loc:Tr Param.AMinus.Tip}" Value="{Binding AMinus}" Minimum="0" Maximum="0.06" Step="0.001" Decimals="3" />
+                        <c:ParamSlider Label="τ+" Tip="{loc:Tr Param.TauPlus.Tip}" Value="{Binding TauPlus}" Minimum="2" Maximum="60" Step="1" Unit="ms" Decimals="0" />
+                        <c:ParamSlider Label="τ−" Tip="{loc:Tr Param.TauMinus.Tip}" Value="{Binding TauMinus}" Minimum="2" Maximum="60" Step="1" Unit="ms" Decimals="0" />
+                        <Border Style="{StaticResource InsetPanel}" Margin="0,6,0,0" ToolTip="{loc:Tr Stdp.Balance.Tip}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding BalanceText}" Style="{StaticResource Mono}" Foreground="{StaticResource AccentBrush}" />
+                                <TextBlock Text="{Binding BalanceVerdict}" Style="{StaticResource Muted}" FontSize="12.5" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE8EF;" Title="{loc:Tr Stdp.Window}" Tip="{loc:Tr Stdp.Window.Tip}" />
+                        <sp:WpfPlot x:Name="WindowPlot" Height="330" />
+                        <TextBlock Text="{Binding WindowValueText}" Style="{StaticResource Mono}" Foreground="{StaticResource TextMutedBrush}" Margin="0,8,0,0" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr Stdp.WeightHistory}" Tip="{loc:Tr Stdp.WeightHistory.Tip}" />
+                        <sp:WpfPlot x:Name="WeightPlot" Height="230" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE916;" Title="{loc:Tr Stdp.Animation}" Tip="{loc:Tr Stdp.Animation.Tip}" />
+                        <Border Style="{StaticResource InsetPanel}" Padding="6">
+                            <c:StdpTimelineControl x:Name="Timeline" Height="250" />
+                        </Border>
+                        <TextBlock Text="{Binding Explanation}" Style="{StaticResource Body}" Margin="0,10,0,4" />
+                        <UniformGrid Columns="2" Margin="-4,4,-4,0">
+                            <c:MetricTile Title="{loc:Tr Stdp.Weight}" Value="{Binding WeightText}" Glyph="&#xE71B;" Accent="{StaticResource AccentBrush}"
+                                          Level="{Binding Experiment.Weight}" Tip="{loc:Tr Stdp.Weight.Tip}" />
+                            <c:MetricTile Title="{loc:Tr Stdp.Pairings}" Value="{Binding CountText}" Glyph="&#xE916;" Accent="{StaticResource Accent2Brush}"
+                                          Level="0" Tip="{loc:Tr Stdp.Pairings.Tip}" />
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE82D;" Title="{loc:Tr Stdp.Biology}" />
+                        <Border BorderBrush="{StaticResource Accent2Brush}" BorderThickness="3,0,0,0" Padding="12,4" Margin="0,0,0,10">
+                            <StackPanel>
+                                <TextBlock Text="{loc:Tr Stdp.Hebb.Quote}" Style="{StaticResource Body}" FontStyle="Italic" FontSize="14" />
+                                <TextBlock Text="— Donald O. Hebb, 1949" Style="{StaticResource Caption}" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="{loc:Tr Stdp.Biology.Text}" Style="{StaticResource Muted}" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

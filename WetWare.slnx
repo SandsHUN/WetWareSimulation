@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WetWare.App/WetWare.App.csproj" />
+    <Project Path="src/WetWare.Core/WetWare.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WetWare.Core.Tests/WetWare.Core.Tests.csproj" />
+  </Folder>
+</Solution>

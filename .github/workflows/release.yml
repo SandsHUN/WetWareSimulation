@@ -1,0 +1,35 @@
+name: Release
+
+# Push a version tag (e.g. `git tag v1.0.0 && git push origin v1.0.0`) to build
+# the self-contained executable and attach it to a GitHub release.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Test core
+        run: dotnet test tests/WetWare.Core.Tests -c Release
+
+      - name: Publish single-file executable
+        run: >
+          dotnet publish src/WetWare.App -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true -p:DebugType=none
+          -o publish/win-x64
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: publish/win-x64/WetWareLab.exe
+          generate_release_notes: true

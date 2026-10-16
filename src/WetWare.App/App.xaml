@@ -1,0 +1,30 @@
+﻿<Application x:Class="WetWare.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:WetWare.App.ViewModels"
+             xmlns:views="clr-namespace:WetWare.App.Views"
+             xmlns:c="clr-namespace:WetWare.App.Controls"
+             ShutdownMode="OnMainWindowClose">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/Controls.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+            <c:InverseBoolConverter x:Key="InverseBool" />
+            <c:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility" />
+            <c:EqualsConverter x:Key="Equals" />
+
+            <DataTemplate DataType="{x:Type vm:HomeViewModel}"><views:HomeView /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:NeuronLabViewModel}"><views:NeuronLabView /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:NetworkViewModel}"><views:NetworkView /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:StdpLabViewModel}"><views:StdpLabView /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:CodingViewModel}"><views:CodingView /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:VisionViewModel}"><views:VisionView /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:RecognitionViewModel}"><views:RecognitionView /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:ScenariosViewModel}"><views:ScenariosView /></DataTemplate>
+            <DataTemplate DataType="{x:Type vm:GlossaryViewModel}"><views:GlossaryView /></DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

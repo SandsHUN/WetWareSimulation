@@ -1,0 +1,30 @@
+<UserControl x:Class="WetWare.App.Controls.EquationTerm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="Root" VerticalAlignment="Top" Cursor="Help">
+    <Border CornerRadius="8" Padding="6,2" BorderThickness="1"
+            ToolTip="{Binding Tip, ElementName=Root}" ToolTipService.InitialShowDelay="100">
+        <Border.Style>
+            <Style TargetType="Border">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{StaticResource AccentSoftBrush}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <StackPanel HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding Symbol, ElementName=Root}" FontFamily="{StaticResource MathFont}" FontStyle="Italic" FontSize="24"
+                           Foreground="{StaticResource TextBrush}" />
+                <TextBlock Text="{Binding Sub, ElementName=Root}" FontFamily="{StaticResource MathFont}" FontStyle="Italic" FontSize="13"
+                           Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Bottom" Margin="1,0,0,1" />
+            </StackPanel>
+            <TextBlock Text="{Binding ValueText, ElementName=Root}" FontFamily="{StaticResource MonoFont}" FontSize="11.5"
+                       HorizontalAlignment="Center" Foreground="{Binding ValueBrush, ElementName=Root}" Margin="0,1,0,0" />
+        </StackPanel>
+    </Border>
+</UserControl>

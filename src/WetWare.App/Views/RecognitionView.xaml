@@ -1,0 +1,200 @@
+<UserControl x:Class="WetWare.App.Views.RecognitionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:WetWare.App.Localization"
+             xmlns:c="clr-namespace:WetWare.App.Controls"
+             xmlns:vm="clr-namespace:WetWare.App.ViewModels"
+             xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <UserControl.Resources>
+        <Style x:Key="DigitButton" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="Padding" Value="0,6" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+        </Style>
+        <Style x:Key="StepNumber" TargetType="Border">
+            <Setter Property="Width" Value="24" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Background" Value="{StaticResource AccentSoftBrush}" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Margin" Value="0,0,10,0" />
+        </Style>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="0,0,0,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="330" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ============ Input ============ -->
+            <StackPanel Grid.Column="0">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE70F;" Title="{loc:Tr Rec.Pad}" Tip="{loc:Tr Rec.Pad.Tip}" />
+                        <Border Style="{StaticResource InsetPanel}" Padding="8">
+                            <c:ImageViewControl x:Name="PadView" Height="290" AllowPaint="True" ShowGrid="True" />
+                        </Border>
+                        <TextBlock Text="{loc:Tr Rec.Pad.Hint}" Style="{StaticResource Caption}" FontWeight="Normal" Margin="0,6,0,8" />
+                        <UniformGrid Columns="5" Margin="-3,0">
+                            <Button Style="{StaticResource DigitButton}" Content="0" Command="{Binding LoadDigitCommand}" CommandParameter="0" ToolTip="{loc:Tr Rec.Digit.Tip}" />
+                            <Button Style="{StaticResource DigitButton}" Content="1" Command="{Binding LoadDigitCommand}" CommandParameter="1" ToolTip="{loc:Tr Rec.Digit.Tip}" />
+                            <Button Style="{StaticResource DigitButton}" Content="2" Command="{Binding LoadDigitCommand}" CommandParameter="2" ToolTip="{loc:Tr Rec.Digit.Tip}" />
+                            <Button Style="{StaticResource DigitButton}" Content="3" Command="{Binding LoadDigitCommand}" CommandParameter="3" ToolTip="{loc:Tr Rec.Digit.Tip}" />
+                            <Button Style="{StaticResource DigitButton}" Content="4" Command="{Binding LoadDigitCommand}" CommandParameter="4" ToolTip="{loc:Tr Rec.Digit.Tip}" />
+                            <Button Style="{StaticResource DigitButton}" Content="5" Command="{Binding LoadDigitCommand}" CommandParameter="5" ToolTip="{loc:Tr Rec.Digit.Tip}" />
+                            <Button Style="{StaticResource DigitButton}" Content="6" Command="{Binding LoadDigitCommand}" CommandParameter="6" ToolTip="{loc:Tr Rec.Digit.Tip}" />
+                            <Button Style="{StaticResource DigitButton}" Content="7" Command="{Binding LoadDigitCommand}" CommandParameter="7" ToolTip="{loc:Tr Rec.Digit.Tip}" />
+                            <Button Style="{StaticResource DigitButton}" Content="8" Command="{Binding LoadDigitCommand}" CommandParameter="8" ToolTip="{loc:Tr Rec.Digit.Tip}" />
+                            <Button Style="{StaticResource DigitButton}" Content="9" Command="{Binding LoadDigitCommand}" CommandParameter="9" ToolTip="{loc:Tr Rec.Digit.Tip}" />
+                        </UniformGrid>
+                        <c:ParamSlider Label="{loc:Tr Rec.TestNoise}" Tip="{loc:Tr Rec.TestNoise.Tip}" Value="{Binding TestNoise}"
+                                       Minimum="0" Maximum="0.3" Step="0.01" Decimals="2" Margin="0,10,0,6" />
+                        <WrapPanel>
+                            <Button Content="{loc:Tr Rec.AddNoise}" ToolTip="{loc:Tr Rec.AddNoise.Tip}" Command="{Binding AddNoiseCommand}" Margin="0,0,6,6" />
+                            <Button Content="{loc:Tr Common.Clear}" ToolTip="{loc:Tr Rec.Clear.Tip}" Command="{Binding ClearPadCommand}" Margin="0,0,6,6" />
+                        </WrapPanel>
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding RecognizeCommand}" ToolTip="{loc:Tr Rec.Recognize.Tip}"
+                                HorizontalAlignment="Stretch" Padding="12,10" Margin="0,4,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE928;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <TextBlock Text="{loc:Tr Rec.Recognize}" FontSize="14" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE73E;" Title="{loc:Tr Rec.ResultTitle}" Tip="{loc:Tr Rec.ResultTitle.Tip}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="96" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Width="86" Height="96" CornerRadius="14" Background="{StaticResource Bg1Brush}" BorderBrush="{Binding ResultBrush}" BorderThickness="2">
+                                <TextBlock Text="{Binding PredictedText}" FontFamily="{StaticResource DisplayFont}" FontSize="58" FontWeight="SemiBold"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{Binding ResultBrush}" />
+                            </Border>
+                            <TextBlock Grid.Column="1" Text="{Binding ResultText}" Style="{StaticResource Body}" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- ============ Presentation ============ -->
+            <StackPanel Grid.Column="1">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE9D9;" Title="{loc:Tr Rec.Presentation}" Tip="{loc:Tr Rec.Presentation.Tip}" />
+                        <c:RasterPlotControl x:Name="Raster" Height="380" RowCount="83" WindowMs="150" SpikeWidth="2" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE71B;" Title="{loc:Tr Rec.Outputs}" Tip="{loc:Tr Rec.Outputs.Tip}" />
+                        <ItemsControl ItemsSource="{Binding Outputs}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="1" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:OutputNeuronItem}">
+                                    <StackPanel Margin="2,0" ToolTip="{Binding Spikes}">
+                                        <Grid Height="110">
+                                            <Border Background="{StaticResource Bg1Brush}" CornerRadius="4" />
+                                            <Border x:Name="Bar" VerticalAlignment="Bottom" CornerRadius="4" Background="{StaticResource Accent2Brush}"
+                                                    Height="{Binding Level, Converter={x:Static vm:LevelToHeight.Instance}}" />
+                                        </Grid>
+                                        <TextBlock x:Name="Lbl" Text="{Binding Label}" HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="13" Margin="0,4,0,0"
+                                                   Foreground="{StaticResource TextBrush}" />
+                                        <TextBlock Text="{Binding Spikes}" HorizontalAlignment="Center" Style="{StaticResource Caption}" FontWeight="Normal" />
+                                    </StackPanel>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsWinner}" Value="True">
+                                            <Setter TargetName="Bar" Property="Background" Value="{StaticResource AccentGradientBrush}" />
+                                            <Setter TargetName="Lbl" Property="Foreground" Value="{StaticResource AccentBrush}" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="{loc:Tr Rec.Outputs.Note}" Style="{StaticResource Caption}" FontWeight="Normal" Margin="0,8,0,0" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- ============ Training ============ -->
+            <StackPanel Grid.Column="2">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE7BE;" Title="{loc:Tr Rec.Training}" Tip="{loc:Tr Rec.Training.Tip}" />
+                        <WrapPanel Margin="0,0,0,8">
+                            <ToggleButton IsChecked="{Binding IsTraining, Mode=OneWay}" Command="{Binding ToggleTrainingCommand}" ToolTip="{loc:Tr Rec.Train.Tip}" Margin="0,0,6,6">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE768;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                    <TextBlock Text="{loc:Tr Rec.Train}" />
+                                </StackPanel>
+                            </ToggleButton>
+                            <Button Content="{loc:Tr Rec.QuickTrain}" ToolTip="{loc:Tr Rec.QuickTrain.Tip}" Command="{Binding QuickTrainCommand}" Margin="0,0,6,6" />
+                            <Button Content="{loc:Tr Rec.ResetNet}" ToolTip="{loc:Tr Rec.ResetNet.Tip}" Command="{Binding ResetNetworkCommand}" Margin="0,0,6,6" />
+                        </WrapPanel>
+                        <c:ParamSlider Label="{loc:Tr Rec.Speed}" Tip="{loc:Tr Rec.Speed.Tip}" Value="{Binding TrainSpeed}" Minimum="1" Maximum="30" Step="1" Unit="/frame" Decimals="0" />
+                        <c:ParamSlider Label="{loc:Tr Rec.TrainNoise}" Tip="{loc:Tr Rec.TrainNoise.Tip}" Value="{Binding TrainNoise}" Minimum="0" Maximum="0.2" Step="0.01" Decimals="2" />
+                        <UniformGrid Columns="2" Margin="-4,4,-4,4">
+                            <c:MetricTile Title="{loc:Tr Rec.Samples}" Value="{Binding SamplesText}" Glyph="&#xE8FD;" Accent="{StaticResource Accent2Brush}" Level="0"
+                                          Tip="{loc:Tr Rec.Samples.Tip}" />
+                            <c:MetricTile Title="{loc:Tr Rec.Accuracy}" Value="{Binding AccuracyText}" Glyph="&#xE73E;" Accent="{StaticResource SuccessBrush}"
+                                          Level="{Binding AccuracyLevel}" Tip="{loc:Tr Rec.Accuracy.Tip}" />
+                        </UniformGrid>
+                        <sp:WpfPlot x:Name="AccuracyPlot" Height="170" />
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE80A;" Title="{loc:Tr Rec.Fields}" Tip="{loc:Tr Rec.Fields.Tip}" />
+                        <UniformGrid x:Name="FieldsGrid" Columns="5" />
+                        <TextBlock Text="{Binding LabelsText}" Style="{StaticResource Caption}" FontWeight="Normal" Margin="0,8,0,0" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- ============ How it works ============ -->
+            <Border Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE82D;" Title="{loc:Tr Rec.How}" />
+                    <UniformGrid Columns="5">
+                        <DockPanel Margin="0,0,14,0">
+                            <Border DockPanel.Dock="Left" Style="{StaticResource StepNumber}"><TextBlock Text="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" /></Border>
+                            <TextBlock Text="{loc:Tr Rec.How.1}" Style="{StaticResource Muted}" FontSize="12.5" />
+                        </DockPanel>
+                        <DockPanel Margin="0,0,14,0">
+                            <Border DockPanel.Dock="Left" Style="{StaticResource StepNumber}"><TextBlock Text="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" /></Border>
+                            <TextBlock Text="{loc:Tr Rec.How.2}" Style="{StaticResource Muted}" FontSize="12.5" />
+                        </DockPanel>
+                        <DockPanel Margin="0,0,14,0">
+                            <Border DockPanel.Dock="Left" Style="{StaticResource StepNumber}"><TextBlock Text="3" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" /></Border>
+                            <TextBlock Text="{loc:Tr Rec.How.3}" Style="{StaticResource Muted}" FontSize="12.5" />
+                        </DockPanel>
+                        <DockPanel Margin="0,0,14,0">
+                            <Border DockPanel.Dock="Left" Style="{StaticResource StepNumber}"><TextBlock Text="4" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" /></Border>
+                            <TextBlock Text="{loc:Tr Rec.How.4}" Style="{StaticResource Muted}" FontSize="12.5" />
+                        </DockPanel>
+                        <DockPanel>
+                            <Border DockPanel.Dock="Left" Style="{StaticResource StepNumber}"><TextBlock Text="5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" /></Border>
+                            <TextBlock Text="{loc:Tr Rec.How.5}" Style="{StaticResource Muted}" FontSize="12.5" />
+                        </DockPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

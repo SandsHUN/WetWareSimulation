@@ -1,0 +1,15 @@
+<UserControl x:Class="WetWare.App.Controls.SectionHeader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:WetWare.App.Controls"
+             x:Name="Root" Margin="0,0,0,10">
+    <DockPanel LastChildFill="False">
+        <Border DockPanel.Dock="Left" Width="28" Height="28" CornerRadius="8" Background="{StaticResource AccentSoftBrush}" Margin="0,0,10,0">
+            <TextBlock Text="{Binding Glyph, ElementName=Root}" Style="{StaticResource Icon}" FontSize="14"
+                       HorizontalAlignment="Center" Foreground="{StaticResource AccentBrush}" />
+        </Border>
+        <TextBlock DockPanel.Dock="Left" Text="{Binding Title, ElementName=Root}" Style="{StaticResource H3}" VerticalAlignment="Center" />
+        <c:InfoTip DockPanel.Dock="Left" Margin="8,0,0,0" Text="{Binding Tip, ElementName=Root}" x:Name="Info" />
+        <ContentPresenter DockPanel.Dock="Right" Content="{Binding Actions, ElementName=Root}" VerticalAlignment="Center" />
+    </DockPanel>
+</UserControl>
