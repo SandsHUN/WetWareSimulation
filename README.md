@@ -2,7 +2,7 @@
 
 **English** · [Magyar](README.hu.md)
 
-[![Build](https://github.com/SandsHUN/WetWereSimulation/actions/workflows/build.yml/badge.svg)](https://github.com/SandsHUN/WetWereSimulation/actions/workflows/build.yml)
+[![Build](https://github.com/SandsHUN/WetWareSimulation/actions/workflows/build.yml/badge.svg)](https://github.com/SandsHUN/WetWareSimulation/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 An interactive, bilingual (English / Hungarian) Windows desktop app that makes **biological computation** visible – from a single leaky neuron, through a learning 100-neuron network, to a retina model and a spiking network that learns to recognise digits without a teacher.
@@ -13,7 +13,7 @@ It is built for teaching and demonstration: every control has a tooltip, every p
 
 ## Download
 
-Grab `WetWareLab.exe` from the [latest release](https://github.com/SandsHUN/WetWereSimulation/releases/latest). It is a single self-contained file – no installation and no .NET runtime required (Windows 10/11, 64-bit).
+Grab `WetWareLab.exe` from the [latest release](https://github.com/SandsHUN/WetWareSimulation/releases/latest). It is a single self-contained file – no installation and no .NET runtime required (Windows 10/11, 64-bit).
 
 > The executable is not code-signed, so Windows SmartScreen may warn on first launch: click **More info → Run anyway**.
 
