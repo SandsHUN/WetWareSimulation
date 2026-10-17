@@ -108,4 +108,4 @@ WetWare Lab is free software, released under the [MIT license](LICENSE). You are
 
 The only condition is that the copyright and license notice stays with copies of the software. It comes without any warranty.
 
-[MIT](LICENSE) © SandsHUN
+[MIT](LICENSE) © 2026 Arthelais Labs LLC

@@ -84,4 +84,4 @@ A WetWare Lab szabad szoftver, [MIT licenc](LICENSE) alatt jelent meg. Szabadon:
 
 Az egyetlen feltétel, hogy a szerzői jogi és licencmegjegyzés a szoftver példányaival együtt maradjon. A szoftver mindenféle garancia nélkül érhető el.
 
-[MIT](LICENSE) © SandsHUN
+[MIT](LICENSE) © 2026 Arthelais Labs LLC
