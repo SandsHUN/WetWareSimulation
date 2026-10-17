@@ -9,7 +9,13 @@
     <AssemblyName>WetWareLab</AssemblyName>
     <RootNamespace>WetWare.App</RootNamespace>
     <Product>WetWare Lab</Product>
-    <Version>1.0.0</Version>
+    <Company>Arthelais Labs</Company>
+    <Authors>Arthelais Labs</Authors>
+    <Copyright>© 2026 Arthelais Labs</Copyright>
+    <!-- Major.minor; the third part is the build number from build.number, incremented on every build. -->
+    <VersionBase>1.0</VersionBase>
+    <BuildNumberFile>$(MSBuildThisFileDirectory)build.number</BuildNumberFile>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <!-- ScottPlot's SkiaSharp.Views.WPF dependency only ships .NET Framework assets; it works fine on .NET 8. -->
@@ -30,5 +36,28 @@
     <EmbeddedResource Include="Localization\Strings\*.json" />
     <Resource Include="Assets\app.ico" />
   </ItemGroup>
+
+  <!--
+    Every real build bumps build.number and stamps the assembly with VersionBase.BuildNumber.
+    Skipped for IDE design-time builds and WPF's temporary markup project (which only reads the number);
+    pass -p:NoBuildIncrement=true to build without bumping (used by CI so releases match the committed number).
+  -->
+  <Target Name="StampBuildVersion" BeforeTargets="BeforeBuild;GetAssemblyVersion;GenerateAssemblyInfo"
+          Condition="'$(DesignTimeBuild)' != 'true'">
+    <ReadLinesFromFile File="$(BuildNumberFile)" Condition="Exists('$(BuildNumberFile)')">
+      <Output TaskParameter="Lines" PropertyName="_BuildNumber" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <_BuildNumber Condition="'$(_BuildNumber)' == ''">0</_BuildNumber>
+      <_BumpBuild Condition="'$(NoBuildIncrement)' != 'true' and !$(MSBuildProjectName.EndsWith('_wpftmp'))">true</_BumpBuild>
+      <_BuildNumber Condition="'$(_BumpBuild)' == 'true'">$([MSBuild]::Add($(_BuildNumber), 1))</_BuildNumber>
+      <Version>$(VersionBase).$(_BuildNumber)</Version>
+      <AssemblyVersion>$(Version).0</AssemblyVersion>
+      <FileVersion>$(Version).0</FileVersion>
+      <InformationalVersion>$(Version)</InformationalVersion>
+    </PropertyGroup>
+    <WriteLinesToFile Condition="'$(_BumpBuild)' == 'true'" File="$(BuildNumberFile)" Lines="$(_BuildNumber)" Overwrite="true" />
+    <Message Importance="high" Text="WetWare Lab version $(Version)" />
+  </Target>
 
 </Project>

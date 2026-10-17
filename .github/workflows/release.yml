@@ -26,7 +26,7 @@ jobs:
         run: >
           dotnet publish src/WetWare.App -c Release -r win-x64 --self-contained true
           -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
-          -p:EnableCompressionInSingleFile=true -p:DebugType=none
+          -p:EnableCompressionInSingleFile=true -p:DebugType=none -p:NoBuildIncrement=true
           -o publish/win-x64
 
       - uses: softprops/action-gh-release@v2

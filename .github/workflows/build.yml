@@ -16,7 +16,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Build app
-        run: dotnet build src/WetWare.App -c Release
+        run: dotnet build src/WetWare.App -c Release -p:NoBuildIncrement=true
 
       - name: Test core
         run: dotnet test tests/WetWare.Core.Tests -c Release --verbosity normal

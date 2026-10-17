@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:loc="clr-namespace:WetWare.App.Localization"
         xmlns:vm="clr-namespace:WetWare.App.ViewModels"
+        xmlns:svc="clr-namespace:WetWare.App.Services"
         Title="WetWare Lab" Width="1600" Height="980" MinWidth="1180" MinHeight="720"
         WindowStartupLocation="CenterScreen" Icon="/Assets/app.ico" Background="{StaticResource Bg0Brush}"
         Foreground="{StaticResource TextBrush}" FontFamily="{StaticResource UiFont}" FontSize="13"
@@ -61,6 +62,12 @@
                     <Image Source="/Assets/app.ico" Width="26" Height="26" RenderOptions.BitmapScalingMode="HighQuality" />
                     <TextBlock Text="WetWare Lab" FontFamily="{StaticResource DisplayFont}" FontWeight="SemiBold" FontSize="15"
                                Margin="10,0,0,0" VerticalAlignment="Center" />
+                    <Border Margin="8,1,0,0" Padding="7,1,7,2" CornerRadius="6" VerticalAlignment="Center"
+                            Background="{StaticResource Surface2Brush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                            ToolTip="{x:Static svc:AppInfo.Copyright}">
+                        <TextBlock Text="{x:Static svc:AppInfo.VersionLabel}" FontFamily="{StaticResource MonoFont}" FontSize="11"
+                                   Foreground="{StaticResource TextMutedBrush}" />
+                    </Border>
                     <TextBlock Text="{loc:Tr App.Tagline}" Foreground="{StaticResource TextFaintBrush}" FontSize="12.5"
                                Margin="12,1,0,0" VerticalAlignment="Center" />
                 </StackPanel>
@@ -119,7 +126,8 @@
                                     <TextBlock Text="{loc:Tr Shell.Engine}" Style="{StaticResource Caption}" Margin="7,0,0,0" />
                                 </StackPanel>
                                 <TextBlock Text="{loc:Tr Shell.ModelInfo}" Style="{StaticResource Muted}" FontSize="12" Margin="0,6,0,0" LineHeight="17" />
-                                <TextBlock Text="v1.0 · .NET 8 · WPF" Style="{StaticResource Caption}" Margin="0,8,0,0" FontWeight="Normal" />
+                                <TextBlock Text="{x:Static svc:AppInfo.FooterLabel}" Style="{StaticResource Caption}" Margin="0,8,0,0" FontWeight="Normal" />
+                                <TextBlock Text="{x:Static svc:AppInfo.Copyright}" Style="{StaticResource Caption}" Margin="0,3,0,0" FontWeight="Normal" />
                             </StackPanel>
                         </Border>
 

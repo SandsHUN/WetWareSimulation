@@ -52,6 +52,10 @@ Single-file, self-contained executable (~76 MB):
 dotnet publish src/WetWare.App -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -o publish/win-x64
 ```
 
+### Versioning
+
+The version is `major.minor.build` (shown in the title bar and the sidebar). `major.minor` is set by `VersionBase` in `src/WetWare.App/WetWare.App.csproj`; the build number lives in `src/WetWare.App/build.number` and is incremented automatically on every build. CI builds pass `-p:NoBuildIncrement=true`, so a release carries exactly the committed number.
+
 The solution file is `WetWare.slnx`, which needs Visual Studio 2022 17.13+ or the .NET 9.0.200+ SDK; the projects themselves target .NET 8.
 
 ## Architecture

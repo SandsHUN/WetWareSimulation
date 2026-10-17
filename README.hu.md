@@ -29,6 +29,10 @@ dotnet publish src/WetWare.App -c Release -r win-x64 --self-contained true -p:Pu
 
 Eredmény: `publish/win-x64/WetWareLab.exe` – bármely 64 bites Windows 10/11 gépre átmásolható.
 
+### Verziózás
+
+A verzió formátuma `fő.al.build` (a címsorban és az oldalsávban látható). A `fő.al` részt a `src/WetWare.App/WetWare.App.csproj` `VersionBase` értéke adja; a build-szám a `src/WetWare.App/build.number` fájlban van, és minden buildnél automatikusan eggyel nő. A CI `-p:NoBuildIncrement=true` kapcsolóval fordít, így a kiadás pontosan a commitolt számot kapja.
+
 ## Modulok
 
 | Oldal | Tartalom |
