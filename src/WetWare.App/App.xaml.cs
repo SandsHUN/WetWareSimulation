@@ -60,7 +60,7 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Developer switches: <c>--lang en</c>, <c>--page Network</c>, <c>--snapshot out.png [--delay ms]</c>
+    /// Developer switches: <c>--lang en</c>, <c>--page Network</c>, <c>--scenario Seizure</c>, <c>--train 900</c>, <c>--snapshot out.png [--delay ms]</c>
     /// (renders the window to a PNG after the delay and exits – used for visual regression checks).
     /// </summary>
     private void ApplyCommandLine(string[] args, MainWindow window)
@@ -74,6 +74,14 @@ public partial class App : Application
         if (Arg("--lang") is { } lang) LocalizationService.Instance.SetLanguage(lang);
         if (Arg("--page") is { } page) _services!.GetRequiredService<NavigationService>().Navigate(page);
         if (Arg("--scenario") is { } scenario) _services!.GetRequiredService<NetworkViewModel>().LoadScenario(scenario);
+        if (int.TryParse(Arg("--train"), out int samples))
+        {
+            // Pre-train the digit classifier and start recognising a "3", so screenshots show a learned state.
+            var recognition = _services!.GetRequiredService<RecognitionViewModel>();
+            for (int k = 0; k < samples; k += 300) recognition.QuickTrainCommand.Execute(null);
+            recognition.LoadDigitCommand.Execute("3");
+            recognition.RecognizeCommand.Execute(null);
+        }
         if (Arg("--snapshot") is { } path)
         {
             int delay = int.TryParse(Arg("--delay"), out int d) ? d : 4000;

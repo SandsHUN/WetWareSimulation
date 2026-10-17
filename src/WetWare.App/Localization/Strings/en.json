@@ -724,5 +724,7 @@
   "Vision.Surround": "Surround size σs",
   "Vision.Surround.Tip": "Radius of the inhibitory surround (always larger than the centre).",
   "Vision.Wavelength": "V1 wavelength λ",
-  "Vision.Wavelength.Tip": "Spatial period of the Gabor filters: the bar width / spatial frequency preferred by the V1 cells."
+  "Vision.Wavelength.Tip": "Spatial period of the Gabor filters: the bar width / spatial frequency preferred by the V1 cells.",
+  "Shell.License": "Free & open source · MIT license",
+  "Shell.License.Tip": "WetWare Lab is free to distribute: the program and its source code may be used, copied, shared and modified free of charge – even in your own projects or commercially. The only condition is that the copyright and license notice is kept. Click for the source code (GitHub)."
 }

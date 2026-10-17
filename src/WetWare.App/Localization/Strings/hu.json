@@ -724,5 +724,7 @@
   "Vision.Surround": "Környék mérete σs",
   "Vision.Surround.Tip": "A gátló környék sugara (mindig nagyobb a centrumnál).",
   "Vision.Wavelength": "V1 hullámhossz λ",
-  "Vision.Wavelength.Tip": "A Gabor-szűrők térbeli periódusa: a V1 sejtek által preferált vonalvastagság / térbeli frekvencia."
+  "Vision.Wavelength.Tip": "A Gabor-szűrők térbeli periódusa: a V1 sejtek által preferált vonalvastagság / térbeli frekvencia.",
+  "Shell.License": "Szabad szoftver · MIT licenc",
+  "Shell.License.Tip": "A WetWare Lab szabadon terjeszthető: a program és a forráskódja ingyen használható, másolható, továbbadható és módosítható – akár saját projektben vagy kereskedelmi célra is. A feltétel csupán annyi, hogy a szerzői jogi és licencmegjegyzés megmaradjon. Kattints a forráskódért (GitHub)."
 }

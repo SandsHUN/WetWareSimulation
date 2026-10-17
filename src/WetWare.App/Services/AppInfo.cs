@@ -17,5 +17,7 @@ public static class AppInfo
     public static string Copyright { get; } =
         Assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? string.Empty;
 
+    public static Uri SourceUrl { get; } = new("https://github.com/SandsHUN/WetWareSimulation");
+
     public static string FooterLabel { get; } = $"{VersionLabel} · .NET 8 · WPF";
 }

@@ -11,6 +11,10 @@ It is built for teaching and demonstration: every control has a tooltip, every p
 
 ![Network page during a seizure scenario](docs/screenshots/network-seizure.png)
 
+**Free to use and share.** WetWare Lab is open source under the [MIT license](LICENSE): you may use, copy, distribute and modify both the app and its source code free of charge – in classrooms, in your own projects or commercially. Just keep the copyright and license notice.
+
+📖 **New here? Read the [User Guide](docs/USER_GUIDE.md)** ([magyarul](docs/USER_GUIDE.hu.md)) – a page-by-page tour of what you see on screen, what to try and what it teaches.
+
 ## Download
 
 Grab `WetWareLab.exe` from the [latest release](https://github.com/SandsHUN/WetWareSimulation/releases/latest). It is a single self-contained file – no installation and no .NET runtime required (Windows 10/11, 64-bit).
@@ -76,7 +80,7 @@ All UI text lives in `src/WetWare.App/Localization/Strings/en.json` and `hu.json
 WetWareLab.exe --lang en --page Network --scenario Seizure --snapshot out.png --delay 5000
 ```
 
-Opens a page, optionally starts a scenario, saves a screenshot after the delay and exits – used for automated visual checks. Page keys: `Home`, `Neuron`, `Network`, `Stdp`, `Coding`, `Vision`, `Recognition`, `Scenarios`, `Glossary`.
+`--train 900` pre-trains the digit classifier and starts recognising a digit. The command opens a page, optionally starts a scenario, saves a screenshot after the delay and exits – used for automated visual checks. Page keys: `Home`, `Neuron`, `Network`, `Stdp`, `Coding`, `Vision`, `Recognition`, `Scenarios`, `Glossary`.
 
 ## References
 
@@ -95,5 +99,13 @@ Opens a page, optionally starts a scenario, saves a screenshot after the delay a
 Bug reports, corrections to the science and new translations are welcome – please open an issue or a pull request.
 
 ## License
+
+WetWare Lab is free software, released under the [MIT license](LICENSE). You are free to:
+
+- **use** it for any purpose – teaching, research, personal or commercial;
+- **copy and distribute** the app (`WetWareLab.exe`) and the source code, e.g. install it on every classroom PC;
+- **modify** it, translate it or build your own projects on the code.
+
+The only condition is that the copyright and license notice stays with copies of the software. It comes without any warranty.
 
 [MIT](LICENSE) © SandsHUN

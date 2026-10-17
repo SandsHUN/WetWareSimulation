@@ -128,6 +128,12 @@
                                 <TextBlock Text="{loc:Tr Shell.ModelInfo}" Style="{StaticResource Muted}" FontSize="12" Margin="0,6,0,0" LineHeight="17" />
                                 <TextBlock Text="{x:Static svc:AppInfo.FooterLabel}" Style="{StaticResource Caption}" Margin="0,8,0,0" FontWeight="Normal" />
                                 <TextBlock Text="{x:Static svc:AppInfo.Copyright}" Style="{StaticResource Caption}" Margin="0,3,0,0" FontWeight="Normal" />
+                                <TextBlock Style="{StaticResource Caption}" Margin="0,3,0,0" FontWeight="Normal" ToolTip="{loc:Tr Shell.License.Tip}">
+                                    <Hyperlink NavigateUri="{x:Static svc:AppInfo.SourceUrl}" RequestNavigate="Hyperlink_RequestNavigate"
+                                               Foreground="{StaticResource AccentBrush}" TextDecorations="{x:Null}">
+                                        <Run Text="{loc:Tr Shell.License}" />
+                                    </Hyperlink>
+                                </TextBlock>
                             </StackPanel>
                         </Border>
 

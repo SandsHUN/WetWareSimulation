@@ -2,7 +2,11 @@
 
 [English](README.md) · **Magyar**
 
-![Hálózat oldal roham közben](docs/screenshots/network-seizure.png)
+![Hálózat oldal roham közben](docs/screenshots/hu/network-seizure.png)
+
+**Szabadon használható és terjeszthető.** A WetWare Lab nyílt forráskódú, [MIT licenc](LICENSE) alatt: az app és a forráskódja ingyen használható, másolható, terjeszthető és módosítható – tanórán, saját projektben vagy akár kereskedelmi célra is. Csak a szerzői jogi és licencmegjegyzésnek kell megmaradnia.
+
+📖 **Most ismerkedsz vele? Olvasd el a [Felhasználói útmutatót](docs/USER_GUIDE.hu.md)** ([English](docs/USER_GUIDE.md)) – oldalanként bemutatja, mit látsz a képernyőn, mit érdemes kipróbálni, és mit tanulhatsz belőle.
 
 ## Letöltés
 
@@ -63,7 +67,7 @@ A szövegek a `src/WetWare.App/Localization/Strings/hu.json` és `en.json` fájl
 
 ## Fejlesztői kapcsolók
 
-`WetWareLab.exe --lang en --page Network --scenario Pavlov --snapshot out.png --delay 5000` – képernyőkép készítése automatizált vizuális ellenőrzéshez. Oldalkulcsok: `Home`, `Neuron`, `Network`, `Stdp`, `Coding`, `Vision`, `Recognition`, `Scenarios`, `Glossary`.
+`WetWareLab.exe --lang en --page Network --scenario Pavlov --snapshot out.png --delay 5000` – képernyőkép készítése automatizált vizuális ellenőrzéshez. A `--train 900` előre betanítja a számjegy-felismerőt, és elindít egy felismerést. Oldalkulcsok: `Home`, `Neuron`, `Network`, `Stdp`, `Coding`, `Vision`, `Recognition`, `Scenarios`, `Glossary`.
 
 
 ## Hivatkozások
@@ -71,5 +75,13 @@ A szövegek a `src/WetWare.App/Localization/Strings/hu.json` és `en.json` fájl
 A modellek forrásait lásd az [angol README](README.md#references) végén.
 
 ## Licenc
+
+A WetWare Lab szabad szoftver, [MIT licenc](LICENSE) alatt jelent meg. Szabadon:
+
+- **használhatod** bármilyen célra – oktatás, kutatás, magán- vagy kereskedelmi felhasználás;
+- **másolhatod és terjesztheted** az appot (`WetWareLab.exe`) és a forráskódot, pl. felteheted a tanterem minden gépére;
+- **módosíthatod**, lefordíthatod, vagy saját projektet építhetsz a kódra.
+
+Az egyetlen feltétel, hogy a szerzői jogi és licencmegjegyzés a szoftver példányaival együtt maradjon. A szoftver mindenféle garancia nélkül érhető el.
 
 [MIT](LICENSE) © SandsHUN
