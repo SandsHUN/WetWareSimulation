@@ -26,7 +26,7 @@ public sealed class LocalizationService : INotifyPropertyChanged
         _tables[Hungarian] = Load(Hungarian);
         _tables[English] = Load(English);
         _fallback = _tables[English];
-        SetLanguage(Hungarian);
+        SetLanguage(English);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -34,11 +34,11 @@ public sealed class LocalizationService : INotifyPropertyChanged
     /// <summary>Raised after the language changed and all bindings were refreshed.</summary>
     public event EventHandler? LanguageChanged;
 
-    public string Language { get; private set; } = Hungarian;
+    public string Language { get; private set; } = English;
 
     public bool IsHungarian => Language == Hungarian;
 
-    public CultureInfo Culture { get; private set; } = CultureInfo.GetCultureInfo("hu-HU");
+    public CultureInfo Culture { get; private set; } = CultureInfo.GetCultureInfo("en-US");
 
     public IReadOnlyCollection<string> Keys => _current.Keys;
 

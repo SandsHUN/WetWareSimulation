@@ -30,7 +30,7 @@ Grab `WetWareLab.exe` from the [latest release](https://github.com/SandsHUN/WetW
 | **Experiments** | Pavlovian conditioning, epileptiform seizure, homeostasis, information coding – one click each |
 | **Glossary** | 38 searchable terms in both languages |
 
-The language can be switched at any time while the app is running.
+The app starts in English; switch to Hungarian (and back) at any time with the toggle in the top-right corner – the choice is remembered.
 
 <table>
 <tr><td><img src="docs/screenshots/neuron-lab.png" alt="Neuron lab"></td><td><img src="docs/screenshots/vision.png" alt="Vision"></td></tr>

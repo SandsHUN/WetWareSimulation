@@ -5,7 +5,10 @@ namespace WetWare.App.Services;
 
 public sealed class AppSettings
 {
-    public string Language { get; set; } = "hu";
+    /// <summary>Schema version of the saved file; files written before versioning deserialize as 0.</summary>
+    public int Version { get; set; }
+
+    public string Language { get; set; } = "en";
     public bool ShowGuides { get; set; } = true;
     public bool ShowSimple { get; set; } = true;
     public bool SidebarExpanded { get; set; } = true;
@@ -14,6 +17,9 @@ public sealed class AppSettings
 /// <summary>Persists user preferences in %AppData%\WetWareLab\settings.json.</summary>
 public sealed class SettingsService
 {
+    /// <summary>Version 1: English became the default language (older files saved Hungarian implicitly).</summary>
+    private const int CurrentVersion = 1;
+
     private readonly string _path = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WetWareLab", "settings.json");
 
@@ -29,6 +35,13 @@ public sealed class SettingsService
         catch (Exception)
         {
             Current = new AppSettings();
+        }
+
+        if (Current.Version < CurrentVersion)
+        {
+            if (Current.Version < 1) Current.Language = "en";
+            Current.Version = CurrentVersion;
+            Save();
         }
     }
 

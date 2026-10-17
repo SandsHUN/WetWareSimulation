@@ -43,7 +43,7 @@ Eredmény: `publish/win-x64/WetWareLab.exe` – bármely 64 bites Windows 10/11 
 | Kísérletek | Pavlovi kondicionálás, roham, homeosztázis, információkódolás |
 | Fogalomtár | 38 kereshető fogalom, kétnyelvűen |
 
-Minden oldalon: tooltipek, „Egyszerűen” (laikusoknak szóló hasonlatok) és „Útmutató” (javasolt kísérletek) panel; futás közbeni HU/EN nyelvváltás.
+Minden oldalon: tooltipek, „Egyszerűen” (laikusoknak szóló hasonlatok) és „Útmutató” (javasolt kísérletek) panel; futás közbeni HU/EN nyelvváltás. Az app alapértelmezetten angolul indul; a jobb felső sarokban magyarra váltható, és a választást megjegyzi.
 
 ## Architektúra
 

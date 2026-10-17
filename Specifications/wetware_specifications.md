@@ -1,310 +1,162 @@
-\# Biológiai Neurális Hálózat Szimulátor és Oktató Munkaállomás
+# Biological Neural Network Simulator and Teaching Workstation
 
-\## Rendszerspecifikáció
+**English** · [Magyar](wetware_specifications.hu.md)
 
+## System specification
 
+> This is the original design document the project started from. The implementation deviates in one major point: instead of a Python/Brian 2 engine connected over ZeroMQ, the same equations run in a native C# engine inside the app (see the main [README](../README.md#architecture)).
 
-A rendszer célja a biológiai számítási elvek (\*\*wetware / neuromorphic computing\*\*) szemléltetése egy olyan szoftverkörnyezetben, amely a biológiai hűségű matematikai modelleket ötvözi a valós idejű, interaktív vizualizációval. Az alkalmazás elsődlegesen \*\*oktató és demonstrációs eszköz\*\*: célja, hogy elvont biofizikai és gépi tanulási koncepciókat (membrándinamika, tüskekódolás, szinaptikus plaszticitás) tegyen közvetlenül manipulálhatóvá és vizuálisan értelmezhetővé szoftvermérnökök és kutatók számára.
+The goal of the system is to demonstrate the principles of biological computation (**wetware / neuromorphic computing**) in a software environment that combines biologically faithful mathematical models with real-time, interactive visualisation. The application is primarily a **teaching and demonstration tool**: it aims to make abstract biophysical and machine-learning concepts (membrane dynamics, spike coding, synaptic plasticity) directly manipulable and visually understandable for software engineers and researchers.
 
+---
 
+## 1. System architecture and data flow
 
-\---
-
-
-
-\## 1. Rendszerarchitektúra és Adatáramlás
-
-
-
-A szoftver két különálló folyamatként fut, minimalizálva a numerikus számítások felületi blokkolását:
-
-
+The software runs as two separate processes, minimising UI blocking by the numerical computation:
 
 ```
-
 +-----------------------------------------------------------------------------+
-
-|                       WPF Oktató Kliens (.NET 8)                            |
-
-|  \* MVVM architektúra (CommunityToolkit.Mvvm)                                |
-
-|  \* ScottPlot 5.0 valós idejű grafikonok + WPF 2D/3D vizualizációs réteg     |
-
-|  \* Interaktív Matematikai Labor (képletek, dinamikus fázistér-grafikonok)   |
-
+|                       WPF Teaching Client (.NET 8)                          |
+|  * MVVM architecture (CommunityToolkit.Mvvm)                                |
+|  * ScottPlot 5.0 real-time charts + WPF 2D/3D visualisation layer           |
+|  * Interactive Maths Lab (formulas, dynamic phase-space plots)              |
 +-------------------------------^-----------------------------+---------------+
-
-&#x20;                               |                             |
-
-&#x20;               PUB/SUB (Telemetria, 30-60 Hz)                | REQ/REP (Parancsok)
-
-&#x20;               ZeroMQ (tcp://127.0.0.1:5556)                 | ZeroMQ (tcp://127.0.0.1:5555)
-
-&#x20;                               |                             |
-
+                                |                             |
+                PUB/SUB (telemetry, 30-60 Hz)                 | REQ/REP (commands)
+                ZeroMQ (tcp://127.0.0.1:5556)                 | ZeroMQ (tcp://127.0.0.1:5555)
+                                |                             |
 +-------------------------------+-----------------------------v---------------+
-
-|                       Brian 2 Szimulációs Motor                             |
-
-|  \* Valós idejű differenciálegyenlet-integráció (Euler / Runge-Kutta)        |
-
-|  \* 100 neuronos biológiai populáció (80% serkentő, 20% gátló)               |
-
-|  \* STDP plaszticitási szabályok és Poisson-háttérzaj generátor               |
-
+|                       Brian 2 Simulation Engine                             |
+|  * Real-time differential equation integration (Euler / Runge-Kutta)        |
+|  * 100-neuron biological population (80% excitatory, 20% inhibitory)        |
+|  * STDP plasticity rules and Poisson background noise generator             |
 +-----------------------------------------------------------------------------+
-
 ```
 
+* **Simulation core (Python / Brian 2):** continuously integrates the neurons' state equations in fixed time steps ($dt = 0.1\text{ ms}$). It does no rendering; internal state (spike timestamps, membrane potentials, synaptic weights) is collected in a memory buffer.
+* **Transport layer (ZeroMQ / NetMQ):**
+  * *Telemetry channel (PUB/SUB):* 30–60 times per second it sends the latest simulation window to the UI as a compact binary or JSON packet.
+  * *Control channel (REQ/REP):* forwards user interventions (current injection, pausing the simulation, parameter changes) to the engine.
+* **WPF front end (.NET 8):** receives the data stream, updates the high-speed charts, animates the network topology and shows the mathematical explanation panels.
 
+---
 
-\*   \*\*Szimulációs mag (Python / Brian 2):\*\* Folyamatosan integrálja a neuronok állapotegyenleteit rögzített időlépésekben ($dt = 0.1\\text{ ms}$). Nem végez renderelést; a belső állapotokat (tüskék időbélyegei, membránpotenciálok, szinapszissúlyok) memóriapufferbe gyűjti.
+## 2. The simulated biological model
 
-\*   \*\*Adatátviteli réteg (ZeroMQ / NetMQ):\*\* 
+The population contains $N = 100$ biologically plausible neurons connected by a randomised *small-world* topology.
 
-&#x20;   \*   \*Telemetria csatorna (PUB/SUB):\* Másodpercenként 30–60 alkalommal kompakt bináris vagy JSON csomagban küldi a legfrissebb szimulációs ablak adatait a felhasználói felület felé.
+### Membrane dynamics: Leaky Integrate-and-Fire (LIF)
 
-&#x20;   \*   \*Vezérlő csatorna (REQ/REP):\* A felhasználó által kezdeményezett beavatkozásokat (áraminjektálás, szimuláció megállítása, paraméterátállítás) továbbítja a motornak.
+The cell membrane acts as an analogue integrator that leaks and discharges when it reaches a threshold:
 
-\*   \*\*WPF Megjelenítő (.NET 8):\*\* Fogadja az adatfolyamot, frissíti a nagy sebességű grafikonokat, animálja a hálózati topológiát, és megjeleníti a matematikai magyarázó felületeket.
+$$\tau_m \frac{dv}{dt} = -(v - E_L) + R_m \cdot (I_{syn} + I_{ext} + I_{noise})$$
 
+* $v$: membrane potential ($\text{mV}$).
+* $E_L = -70\text{ mV}$: resting potential.
+* $V_{th} = -50\text{ mV}$: firing threshold. Crossing it generates an action potential, after which the voltage immediately resets to $V_{reset} = -65\text{ mV}$.
+* $\tau_m = 20\text{ ms}$: membrane time constant (the speed of the leak).
+* $\tau_{ref} = 2\text{ ms}$: absolute refractory period (the time after a spike during which the cell cannot be excited).
 
+### Synaptic learning: Spike-Timing-Dependent Plasticity (STDP)
 
-\---
+Synaptic strength changes depending on the relative timing of pre- and postsynaptic spikes ($\Delta t = t_{post} - t_{pre}$):
 
+$$\Delta w =
+\begin{cases}
+A_+ \cdot e^{-\Delta t / \tau_+}, & \text{if } \Delta t > 0 \text{ (causal: the input caused the output} \rightarrow \text{potentiation / LTP)} \\
+-A_- \cdot e^{\Delta t / \tau_-}, & \text{if } \Delta t < 0 \text{ (coincidence: the postsynaptic cell fired first} \rightarrow \text{depression / LTD)}
+\end{cases}$$
 
+---
 
-\## 2. A Szimulált Biológiai Modell
+## 3. Structural layout of the WPF interface
 
-
-
-A bemutatott populáció $N = 100$ biológiailag hiteles idegsejtet tartalmaz, randomizált, kisvilág (\*small-world\*) topológiával összekötve.
-
-
-
-\### Membránpotenciál Dinamika: Leaky Integrate-and-Fire (LIF)
-
-A sejt membránja analóg integrátorként működik, amely szivárog és küszöbérték elérésekor kisül:
-
-
-
-$$\\tau\_m \\frac{dv}{dt} = -(v - E\_L) + R\_m \\cdot (I\_{syn} + I\_{ext} + I\_{noise})$$
-
-
-
-\*   $v$: Membránfeszültség ($\\text{mV}$).
-
-\*   $E\_L = -70\\text{ mV}$: Nyugalmi feszültség.
-
-\*   $V\_{th} = -50\\text{ mV}$: Tüzelési küszöb. Átlépésekor akciós potenciál generálódik, majd a feszültség azonnal visszaáll $V\_{reset} = -65\\text{ mV}$-ra.
-
-\*   $\\tau\_m = 20\\text{ ms}$: Membrán időállandó (a szivárgás sebessége).
-
-\*   $\\tau\_{ref} = 2\\text{ ms}$: Abszolút refrakter periódus (a kisülés utáni időszak, amikor a sejt ingerelhetetlen).
-
-
-
-\### Szinaptikus Tanulás: Spike-Timing-Dependent Plasticity (STDP)
-
-A szinapszisok erőssége a sejtek tüzelésének relatív időzítésétől függően módosul ($\\Delta t = t\_{post} - t\_{pre}$):
-
-
-
-$$\\Delta w = 
-
-\\begin{cases} 
-
-A\_+ \\cdot e^{-\\Delta t / \\tau\_+}, \& \\text{ha } \\Delta t > 0 \\text{ (Oksági kapcsolat: a bemenet kiváltotta a kimenetet } \\rightarrow \\text{Erősítés / LTP)} \\\\
-
-\-A\_- \\cdot e^{\\Delta t / \\tau\_-}, \& \\text{ha } \\Delta t < 0 \\text{ (Véletlen egybeesés: a posztszinaptikus sejt előbb tüzelt } \\rightarrow \\text{Gyengítés / LTD)}
-
-\\end{cases}$$
-
-
-
-\---
-
-
-
-\## 3. A WPF Felület Strukturális Terve
-
-
-
-A felület egy sötét hátterű, tudományos műszerfal elrendezést követ, funkcionális zónákra bontva:
-
-
+The interface follows a dark scientific dashboard layout divided into functional zones:
 
 ```
-
 +--------------------------------------------------------------------------------------------------------+
-
-| \[MENU] Fájl | Kísérleti forgatókönyvek | Szimulációs sebesség: \[ 1.0x v ] | \[ > ] \[ || ] \[ Step 5ms ]  |
-
+| [MENU] File | Experiment scenarios | Simulation speed: [ 1.0x v ] | [ > ] [ || ] [ Step 5ms ]          |
 +---------------------------------------------------+----------------------------------------------------+
-
-| 1. ÉLŐ ELEKTROFIZIOLÓGIAI MONITOROK               | 2. HÁLÓZATI TOPOLÓGIA ÉS PLASZTICITÁS              |
-
+| 1. LIVE ELECTROPHYSIOLOGY MONITORS                | 2. NETWORK TOPOLOGY AND PLASTICITY                 |
 |                                                   |                                                    |
-
-| \[Spike Raster Plot: Neuron ID 0-99 vs Idő (ms)]   | \[Interaktív Hálózati Gráf]                         |
-
-|  | : :  :: : :  :::  :  ::  :  :::  : :           |   (N1) --\[w=0.8]--> (N2) (Pulzáló kisülések)       |
-
+| [Spike raster plot: neuron ID 0-99 vs time (ms)]  | [Interactive network graph]                        |
+|  | : :  :: : :  :::  :  ::  :  :::  : :           |   (N1) --[w=0.8]--> (N2) (pulsing discharges)      |
 |  |:  : :  : : ::   :  : :  : ::   : : :           |                                                    |
-
-|                                                   | \[STDP Súly-Mátrix Heatmap]                         |
-
-| \[Kijelölt neuron V(t) oszcilloszkópja]            |   Pre vs Post szinapszisok erőssége kék-vörös skálán|
-
-|   -50mV (Küszöb) ------------------------         |                                                    |
-
-|         /\\    /\\                                  | \[Súlyeloszlási Hisztogram]                         |
-
-|   -70mV/  \\--/  \\------------------------         |   Bimodális eloszlás vizualizációja               |
-
+|                                                   | [STDP weight-matrix heatmap]                       |
+| [Oscilloscope of the selected neuron's V(t)]      |   Pre vs post synapse strength on a blue-red scale |
+|   -50mV (threshold) ---------------------         |                                                    |
+|         /\    /\                                  | [Weight distribution histogram]                    |
+|   -70mV/  \--/  \------------------------         |   Visualising the bimodal distribution             |
 +---------------------------------------------------+----------------------------------------------------+
-
-| 3. INTERAKTÍV MATEMATIKAI ÉS ELMÉLETI MAGYARÁZÓ LABOR (Oktató Központ)                                 |
-
+| 3. INTERACTIVE MATHS AND THEORY LAB (teaching centre)                                                  |
 |                                                                                                        |
-
-| \[Formulák \& Élő Paraméter-kötés]                  | \[Fázistér és Dinamikai Görbék]                     |
-
-|  tau\_m \* (dv/dt) = -(v - E\_L) + R\_m \* I           |  \* dv/dt vs v (V-nullcline görbe)                  |
-
-|  \[tau\_m: 20ms] \[E\_L: -70mV] \[V\_th: -50mV]         |  \* STDP Aszimmetrikus Tanulási Görbe               |
-
+| [Formulas & live parameter binding]               | [Phase space and dynamics curves]                  |
+|  tau_m * (dv/dt) = -(v - E_L) + R_m * I           |  * dv/dt vs v (V-nullcline)                        |
+|  [tau_m: 20ms] [E_L: -70mV] [V_th: -50mV]         |  * Asymmetric STDP learning curve                  |
 |                                                   |                                                    |
-
-| \[Biológiai Fogalomtár \& "Mi történik most?" Info] | \[Lépésenkénti Bio-Debugger]                        |
-
-|  "Az 5-ös neuron tüzelt, mert a bejövő EPSP       |  \[ || Freeze \& Inspect ] -> Ingerlés bomlása       |
-
-|   összege elérte a kritikus depolarizációt."      |  számítási lépésről lépésre.                       |
-
+| [Glossary & "What is happening now?" info]        | [Step-by-step Bio-Debugger]                        |
+|  "Neuron 5 fired because the sum of incoming      |  [ || Freeze & Inspect ] -> breakdown of the       |
+|   EPSPs reached the critical depolarisation."     |  stimulation, computation step by step.            |
 +---------------------------------------------------+----------------------------------------------------+
-
-| 4. INGERLŐ ÉS VEZÉRLŐ PULT                        | 5. VALÓS IDEJŰ METRIKÁK                            |
-
-|  \* Elektróda stimuláció (Injektált áram: 0-500 pA)|  \* Hálózati szinkronizációs index: 0.42            |
-
-|  \* STDP tanulási ráta szorzó: \[ 1.0x ]            |  \* Átlagos tüzelési frekvencia: 14.2 Hz            |
-
-|  \* Kísérleti mintázat: \[ Hebbian Demo v ]         |  \* Aktív szinapszisok aránya: 68%                  |
-
+| 4. STIMULATION AND CONTROL PANEL                  | 5. REAL-TIME METRICS                               |
+|  * Electrode stimulation (injected: 0-500 pA)     |  * Network synchrony index: 0.42                   |
+|  * STDP learning-rate multiplier: [ 1.0x ]        |  * Mean firing rate: 14.2 Hz                       |
+|  * Experiment pattern: [ Hebbian Demo v ]         |  * Share of active synapses: 68%                   |
 +---------------------------------------------------+----------------------------------------------------+
-
 ```
 
+---
 
+## 4. Detailed design of the interactive maths panel
 
-\---
+To make it truly educational, the maths panel does not show static text: it works as a visual laboratory synchronised with the live simulation data.
 
+* **Dynamically reacting equations:**
+  * The LIF and STDP differential equations are shown as interactive components.
+  * When the user hovers over a variable (e.g. $\tau_m$ or $R_m$), that part of the formula is highlighted and an info panel explains what the parameter means biologically (e.g. membrane time constant = the product of the membrane's capacitance and resistance, which sets the length of the cell's "memory").
+  * Next to the variables, live numerical values are shown and coloured according to the inspected neuron's state (e.g. during depolarisation $v$ turns from green to yellow, then red when it crosses the threshold).
+* **STDP explanatory chart:**
+  * A dedicated 2D coordinate system plots the two-branched exponential learning curve ($\Delta w$ as a function of $\Delta t$).
+  * When two connected neurons fire one after the other, an animated point appears on the chart at the exact time difference ($\Delta t$), explaining visually: *"Because the pre-neuron fired 4 ms before the post-neuron, the weight increased by +0.08 (LTP point)."*
+* **Phase-plane analysis ($v$ vs. $dv/dt$):**
+  * Next to the classic voltage–time trace, the interface draws the phase diagram of the membrane state.
+  * It shows the stable fixed point (resting state, where $dv/dt = 0$) and the limit cycle, helping to understand nonlinear dynamical systems.
+* **"Step-by-step Bio-Debugger" (didactic mode):**
+  * The simulation can be paused with one click.
+  * The user can step the numerical integrator button by button (in $0.1\text{ ms}$ steps) while the interface prints each computation:
+    1. Leak current: $-(v - E_L) / \tau_m$.
+    2. Summing the incoming synaptic weights.
+    3. Numerical integration: $v_{new} = v_{old} + dt \cdot (dv/dt)$.
+    4. Threshold check: $v_{new} \ge V_{th}$?
 
+---
 
-\## 4. Az Interaktív Matematikai Magyarázó Panel Részletes Terve
+## 5. Built-in teaching scenarios
 
+The interface contains preconfigured experiments that can be loaded with one click to demonstrate biological learning:
 
-
-Az oktató jelleg biztosításához a matematikai panel nem statikus szöveget mutat, hanem a szimuláció pillanatnyi adataival szinkronizált vizuális laboratóriumként működik.
-
-
-
-\*   \*\*Dinamikusan reagáló egyenlet-megjelenítés:\*\*
-
-&#x20;   \*   A LIF és STDP differenciálegyenletek interaktív komponensként jelennek meg.
-
-&#x20;   \*   Ha a felhasználó az egérrel egy változó fölé áll (pl. $\\tau\_m$ vagy $R\_m$), a képlet adott része kiemelkedik, a képernyőn pedig megjelenik egy infópanel: mit jelent a paraméter biológiailag (pl. membrán időállandó = a sejtfal kapacitásának és ellenállásának szorzata, amely meghatározza a sejt "memóriájának" hosszát).
-
-&#x20;   \*   A képletben lévő változók mellett valós idejű numerikus értékek láthatók, amelyek a vizsgált neuron állapotának megfelelően színeződnek (pl. depolarizáció alatt $v$ zöldből sárgába, majd küszöbátlépéskor pirosba vált).
-
-\*   \*\*STDP Magyarázó Grafikon:\*\*
-
-&#x20;   \*   Egy dedikált 2D koordináta-rendszer ábrázolja a kétágú exponenciális tanulási görbét ($\\Delta w$ a $\\Delta t$ függvényében).
-
-&#x20;   \*   Amikor a hálózatban két összekapcsolt neuron kisül egymás után, a grafikonon megjelenik egy animált pont a pontos időkülönbségnél ($\\Delta t$), vizuálisan bemutatva: \*„Mivel a pre-neuron 4 ms-mal a post-neuron előtt tüzelt, a súly megnőtt +0.08 egységgel (LTP pont).”\*
-
-\*   \*\*Fázissík Vizuális Elemzés ($v$ vs. $dv/dt$):\*\*
-
-&#x20;   \*   A klasszikus feszültség-idő diagram mellett a felület kirajzolja a membránállapot fázisdiagramját.
-
-&#x20;   \*   Szemlélteti a stabil fixpontot (nyugalmi állapot, ahol $dv/dt = 0$) és a határciklust, segítve a nemlineáris dinamikai rendszerek megértését.
-
-\*   \*\*„Lépésenkénti Bio-Debugger” (Didaktikai mód):\*\*
-
-&#x20;   \*   Egyetlen gombnyomással megállítható a szimuláció.
-
-&#x20;   \*   A felhasználó gombonként léptetheti a numerikus integrátort ($0.1\\text{ ms}$-os lépésekben), miközben a felület lépésről lépésre kiírja a lefutó számításokat:
-
-&#x20;       1. Szivárgó áram kiszámítása: $-(v - E\_L) / \\tau\_m$.
-
-&#x20;       2. Beérkező szinaptikus súlyok összegezése.
-
-&#x20;       3. Numerikus integráció: $v\_{új} = v\_{régi} + dt \\cdot (dv/dt)$.
-
-&#x20;       4. Küszöb-ellenőrzés: $v\_{új} \\ge V\_{th}$?
-
-
-
-\---
-
-
-
-\## 5. Beépített Oktatási Kísérleti Forgatókönyvek
-
-
-
-A felület előre konfigurált kísérleteket tartalmaz, amelyek egyetlen kattintással betölthetők a biológiai tanulás demonstrálására:
-
-
-
-| Kísérlet Neve | Demonstrált Jelenség | Mit figyelhet meg a tanuló a képernyőn? |
-
+| Experiment | Phenomenon demonstrated | What does the learner see on screen? |
 |---|---|---|
+| **Classical conditioning (Pavlovian Hebbian learning)** | Associative synaptic potentiation (LTP) | Two independent input groups are stimulated. If firing of group A is systematically followed by stimulation of group B, the connecting synapses visibly strengthen on the heatmap until A alone triggers B. |
+| **Synchronisation and seizure (epileptiform activity)** | Loss of inhibition / excessive excitation | When the effect of the inhibitory neurons ($I_{inh}$) is switched off, the network's disordered activity suddenly turns into massive, synchronised spike oscillations on the raster plot. |
+| **Synaptic scaling and homeostasis** | Network stability vs. saturation | If depression ($A_-$) is too small compared to potentiation ($A_+$) in the STDP rule, every synapse runs up to the maximum ($w_{max}$) and the network loses its selectivity. |
+| **Information coding modes** | Rate coding vs. timing coding | Comparing DC stimulation and patterned spike stimulation of equal intensity: how a cell encodes information in its firing rate (rate coding) or in the precise phase of its spikes (phase coding). |
 
-| \*\*Klasszikus Kondicionálás (Pavlovi Hebb-tanulás)\*\* | Asszociatív szinaptikus megerősítés (LTP) | Két független bemeneti neuroncsoport ingerlése. Ha az A csoport tüzelését szisztematikusan a B csoport ingerlése követi, az összekötő szinapszisok súlya a szemünk előtt nő meg a heatmapen, míg végül A önmagában is kiváltja B tüzelését. |
+---
 
-| \*\*Szinkronizáció és Roham (Epileptiform aktivitás)\*\* | Gátlás kiesése / Túlzott gerjesztés | A gátló neuronok hatásának ($I\_{inh}$) lekapcsolásakor a hálózat rendezetlen aktivitása hirtelen masszív, szinkronizált tüske-oszcillációvá alakul a raster ploton. |
+## 6. Proposed extensions
 
-| \*\*Szinaptikus Skálázás és Homeosztázis\*\* | Hálózati stabilitás vs. telítődés | Ha az STDP szabályban a depresszió ($A\_-$) túl kicsi a potencírozáshoz ($A\_+$) képest, az összes szinapszis maximális értékre ($w\_{max}$) fut fel, a hálózat elveszíti szelektivitását. |
+The base system can be extended modularly towards more advanced research and teaching directions:
 
-| \*\*Információkódolási Módok\*\* | Frekvenciakódolás vs. Időzítéskódolás | Azonos intenzitású egyenáramú ingerlés és tüske-mintázatos ingerlés összehasonlítása: hogyan kódol a sejt tüzelési frekvenciával (Rate Coding) vagy a tüske mikroszekundumos fázisával (Phase Coding). |
-
-
-
-\---
-
-
-
-\## 6. Továbbfejlesztési Javaslatok
-
-
-
-A fenti alaprendszer modulárisan bővíthető a fejlettebb kutatási és oktatási irányokba:
-
-
-
-\*   \*\*LLM Embedding / Tokenizer Híd (Neuromorphic-to-LLM Interfész):\*\*
-
-&#x20;   \*   Egy beépített modul, amely képes egy szöveges prompt (pl. mondat beágyazási vektora) dimenzióit bemeneti elektróda-áramokká konvertálni.
-
-&#x20;   \*   A biológiai hálózat rezervoárként (\*Liquid State Machine\*) dolgozza fel a bemenetet, és a leolvasott válaszvektort egy kis méretű nyelvi modell (pl. Llama / Gemma réteg) rejtett állapotába táplálja vissza. Ezzel szemléltethető a hibrid biológiai-szilícium kódolás.
-
-\*   \*\*3D Organoid és MEA Vizualizáció:\*\*
-
-&#x20;   \*   WPF 3D (Helix Toolkit vagy Direct3D) használatával egy gömbszerű sejtcsomó (3D agy-organoid) és a virtuális mikroelektróda-tömb (MEA) modelljének renderelése.
-
-&#x20;   \*   A neuronok fizikai elhelyezkedése szerint jeleníthetők meg a térben, és a tüzelések fényfelvillanásként terjednek végig a 3D szöveten (hasonlóan a valós kalcium-képalkotó mikroszkópos felvételekhez).
-
-\*   \*\*Elektrofiziológiai Audifikáció (Spike Sonification):\*\*
-
-&#x20;   \*   A valós idegtudományi laboratóriumok analógiájára a kijelölt elektródák tüskéinek átalakítása rövid hangimpulzusokká (pattogó hanghatás). A szinkronizáció vagy a frekvenciaváltás hallás után azonnal felismerhetővé válik a felhasználó számára.
-
-\*   \*\*Biológiai Sérülés és Regeneráció (Fault-Tolerance szimuláció):\*\*
-
-&#x20;   \*   „Lézeres ablációs” eszköz a felületen: a felhasználó kijelölhet egy neuroncsoportot, amelyet virtuálisan elpusztít (kikapcsol). Megfigyelhető, hogy a megmaradt hálózat az STDP plaszticitás révén képes-e újrahuzalozni a kiesett funkciót.
-
-\*   \*\*Hardveres Célplatform-Export (Neuromorf kódgenerálás):\*\*
-
-&#x20;   \*   A betanult vagy kialakult hálózati súlymátrix exportálása szilícium alapú neuromorf formátumokba (pl. Intel Loihi / Lava framework, SpiNNaker konfiguráció vagy snnTorch definíció).
-
+* **LLM embedding / tokenizer bridge (neuromorphic-to-LLM interface):**
+  * A module that converts the dimensions of a text prompt (e.g. a sentence embedding vector) into input electrode currents.
+  * The biological network processes the input as a reservoir (*Liquid State Machine*), and the read-out response vector is fed back into the hidden state of a small language model (e.g. a Llama / Gemma layer), illustrating hybrid biological–silicon coding.
+* **3D organoid and MEA visualisation:**
+  * Using WPF 3D (Helix Toolkit or Direct3D) to render a spherical cell cluster (3D brain organoid) and a virtual microelectrode array (MEA).
+  * Neurons are placed according to their physical position in space, and spikes propagate through the 3D tissue as flashes of light (similar to real calcium-imaging microscopy).
+* **Electrophysiological sonification (spike sonification):**
+  * As in real neuroscience labs, spikes on selected electrodes are turned into short sound clicks, so synchronisation or rate changes become instantly recognisable by ear.
+* **Biological damage and regeneration (fault-tolerance simulation):**
+  * A "laser ablation" tool: the user selects a group of neurons and virtually destroys (switches off) them, then observes whether the remaining network can rewire the lost function through STDP plasticity.
+* **Hardware target export (neuromorphic code generation):**
+  * Exporting the trained or emerged weight matrix to silicon neuromorphic formats (e.g. Intel Loihi / Lava framework, SpiNNaker configuration or an snnTorch definition).
