@@ -51,11 +51,26 @@ A verzió formátuma `fő.al.build` (a címsorban és az oldalsávban látható)
 | Kísérletek | Pavlovi kondicionálás, roham, homeosztázis, információkódolás |
 | Fogalomtár | 38 kereshető fogalom, kétnyelvűen |
 
+### Számításos idegtudomány kurzus – kísérőanyag
+
+A menü külön szekciója a *Számításos idegtudomány* kurzus (oktató: Rajesh Rao) 6–8. modulját **14 interaktív leckévé** alakítja. Minden leckében elméleti panel (fogalmak, kulcsegyenletek, biológia, kapcsolat a gépi tanulással), élő labor, „Jegyezd meg” kártya és önellenőrző kérdések válaszokkal – mindkét nyelven.
+
+| Modul | Leckék |
+|---|---|
+| **6 · Szinapszisok és hálózatok** | 6.1 vezetőképesség-alapú szinapszis (AMPA / GABA_A / NMDA / söntölő) és két csatolt neuron · 6.2 feedforward hálózat mint szűrő (v = Wu, élkiemelés) · 6.3 lineáris recurrent hálózat: sajátmódusok, 1/(1−λ) erősítés, okulomotoros integrátor · 6.4 nemlineáris gyűrűhálózat: szelektív erősítés, winner-takes-all, gain modulation, munkamemória · 6.5 E–I oszcillációk: fázissík, komplex sajátértékek, csillapított oszcilláció és határciklus |
+| **7 · Plaszticitás és felügyelet nélküli tanulás** | 7.1 Hebb-, kovariancia- és Oja-szabály, amely megtalálja a főkomponenst · 7.2 competitive learning, K-means és önszerveződő térkép · 7.3 generatív modellek, Gauss-keverék és EM (soft assignment, Bayes a kurzornál, „álmodott” minták) · 7.4 természetes képek sparse kódolása – V1-szerű élszűrők kontra globális PCA-komponensek · 7.5 predictive coding: predikció ↓ / hiba ↑ inference-hurok |
+| **8 · Felügyelt és megerősítéses tanulás, BCI** | 8.1 perceptron, XOR és backpropagationnel tanított MLP · 8.2 TD-tanulás és a dopamin jutalom-predikciós hibája · 8.3 actor–critic a „patkány a csűrben” példán · 8.4 kétirányú BCI: kéreg → FES híd és spike-triggered kondicionálás STDP-szerű ablakkal |
+
+<table>
+<tr><td><img src="docs/screenshots/hu/course.png" alt="Kurzus áttekintés"></td><td><img src="docs/screenshots/hu/course-ring.png" alt="Nemlineáris gyűrűhálózat"></td></tr>
+<tr><td><img src="docs/screenshots/hu/course-sparse.png" alt="Sparse coding"></td><td><img src="docs/screenshots/hu/course-bci.png" alt="Kétirányú BCI"></td></tr>
+</table>
+
 Minden oldalon: tooltipek, „Egyszerűen” (laikusoknak szóló hasonlatok) és „Útmutató” (javasolt kísérletek) panel; futás közbeni HU/EN nyelvváltás. Az app alapértelmezetten angolul indul; a jobb felső sarokban magyarra váltható, és a választást megjegyzi.
 
 ## Architektúra
 
-- `src/WetWare.Core` – platformfüggetlen szimulációs mag (.NET 8): LIF neuron, kisvilág-hálózat késleltetett szinapszisokkal, nyomkövetéses STDP, Tsodyks–Markram rövid távú depresszió, Poisson-zaj, metrikák, forgatókönyvek, kódolás, látás, felismerés.
+- `src/WetWare.Core` – platformfüggetlen szimulációs mag (.NET 8): LIF neuron, kisvilág-hálózat késleltetett szinapszisokkal, nyomkövetéses STDP, Tsodyks–Markram rövid távú depresszió, Poisson-zaj, metrikák, forgatókönyvek, kódolás, látás, felismerés. A `Course/` mappa a kurzusleckék modelljeit tartalmazza (vezetőképesség-alapú szinapszis, rátahálózatok, Hebb / kompetitív / EM / sparse tanulás, perceptron és MLP, TD és actor–critic, BCI).
 - `src/WetWare.App` – WPF kliens (MVVM, CommunityToolkit.Mvvm, ScottPlot 5, saját nagy teljesítményű vezérlők).
 - `tests/WetWare.Core.Tests` – xUnit tesztek (analitikus tüzelési frekvencia, STDP, Pavlov-tanulás, roham-szinkronizáció, látás, felismerés).
 
@@ -63,11 +78,11 @@ Minden oldalon: tooltipek, „Egyszerűen” (laikusoknak szóló hasonlatok) é
 
 ## Lokalizáció
 
-A szövegek a `src/WetWare.App/Localization/Strings/hu.json` és `en.json` fájlokban vannak (azonos kulcsokkal). XAML-ben: `{loc:Tr Kulcs}`.
+A szövegek a `src/WetWare.App/Localization/Strings/hu.json` és `en.json` fájlokban vannak (azonos kulcsokkal); a kurzus szövegei a `Strings/Course/*.hu.json` / `*.en.json` fájlokban, amelyeket induláskor összefésül az app. XAML-ben: `{loc:Tr Kulcs}`.
 
 ## Fejlesztői kapcsolók
 
-`WetWareLab.exe --lang en --page Network --scenario Pavlov --snapshot out.png --delay 5000` – képernyőkép készítése automatizált vizuális ellenőrzéshez. A `--train 900` előre betanítja a számjegy-felismerőt, és elindít egy felismerést. Oldalkulcsok: `Home`, `Neuron`, `Network`, `Stdp`, `Coding`, `Vision`, `Recognition`, `Scenarios`, `Glossary`.
+`WetWareLab.exe --lang en --page Network --scenario Pavlov --snapshot out.png --delay 5000` – képernyőkép készítése automatizált vizuális ellenőrzéshez. A `--train 900` előre betanítja a számjegy-felismerőt, és elindít egy felismerést. Oldalkulcsok: `Home`, `Neuron`, `Network`, `Stdp`, `Coding`, `Vision`, `Recognition`, `Scenarios`, `Glossary`, `Course`, `M6`, `M7`, `M8`; a `--page M7/3` a 7.4-es leckét nyitja meg (nullától számozott leckeindex).
 
 
 ## Hivatkozások

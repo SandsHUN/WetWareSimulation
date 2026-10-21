@@ -1,0 +1,101 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.SparseCodingLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D5;" Title="{loc:Tr M7.Sparse.Learning}" Tip="{loc:Tr M7.Sparse.Learning.Tip}" />
+                    <c:ParamSlider Label="{loc:Tr M7.Sparse.Lambda}" Tip="{loc:Tr M7.Sparse.Lambda.Tip}" Value="{Binding Lambda}" Minimum="0.05" Maximum="2" Step="0.05" Decimals="2" />
+                    <c:ParamSlider Label="{loc:Tr M7.Sparse.Eta}" Value="{Binding LearningRate}" Minimum="0.01" Maximum="0.2" Step="0.01" Decimals="2" />
+                    <c:ParamSlider Label="{loc:Tr Course.Speed}" Value="{Binding Speed}" Minimum="1" Maximum="4" Step="1" Unit="/frame" Decimals="0" />
+                    <WrapPanel Margin="0,6,0,0">
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding ToggleLearningCommand}" Margin="0,0,6,6">
+                            <TextBlock Text="{loc:Tr M7.Sparse.Learn}" />
+                        </Button>
+                        <Button Content="{loc:Tr M7.Sparse.FastForward}" ToolTip="{loc:Tr M7.Sparse.FastForward.Tip}" Command="{Binding FastForwardCommand}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ResetCommand}" ToolTip="{loc:Tr M7.Sparse.Reset.Tip}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                    <TextBlock Text="{Binding Progress}" Style="{StaticResource Readout}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE8B9;" Title="{loc:Tr M7.Sparse.Scene}" Tip="{loc:Tr M7.Sparse.Scene.Tip}">
+                        <c:SectionHeader.Actions>
+                            <Button Style="{StaticResource ChipButton}" Margin="0" Content="{loc:Tr M7.Sparse.NextPatch}" Command="{Binding NextPatchCommand}" />
+                        </c:SectionHeader.Actions>
+                    </c:SectionHeader>
+                    <cc:ImagePatchPicker x:Name="Scene" Height="260" Cursor="Cross" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE80A;" Title="{loc:Tr M7.Sparse.Dictionary}" Tip="{loc:Tr M7.Sparse.Dictionary.Tip}">
+                        <c:SectionHeader.Actions>
+                            <CheckBox Content="{loc:Tr M7.Sparse.ComparePca}" IsChecked="{Binding ShowPca}" ToolTip="{loc:Tr M7.Sparse.ComparePca.Tip}" />
+                        </c:SectionHeader.Actions>
+                    </c:SectionHeader>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="{loc:Tr M7.Sparse.SparseBasis}" Style="{StaticResource Caption}" Margin="0,0,0,6" />
+                            <Border Style="{StaticResource InsetPanel}" Padding="6">
+                                <cc:PatchGrid x:Name="Dictionary" Height="300" Columns="8" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="12,0,0,0" Width="300" Visibility="{Binding ShowPca, Converter={StaticResource BoolToVisibility}}">
+                            <TextBlock Text="{loc:Tr M7.Sparse.PcaBasis}" Style="{StaticResource Caption}" Margin="0,0,0,6" />
+                            <Border Style="{StaticResource InsetPanel}" Padding="6">
+                                <cc:PatchGrid x:Name="PcaGrid" Height="300" Columns="8" Highlight="#FBBF24" />
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M7.Sparse.Encode}" Tip="{loc:Tr M7.Sparse.Encode.Tip}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Width="250">
+                            <cc:PatchGrid x:Name="Triplet" Height="86" Columns="3" Gap="2" />
+                            <UniformGrid Columns="3" Margin="0,4,0,0">
+                                <TextBlock Text="u" Style="{StaticResource Caption}" HorizontalAlignment="Center" FontFamily="{StaticResource MathFont}" FontSize="14" />
+                                <TextBlock Text="Gv" Style="{StaticResource Caption}" HorizontalAlignment="Center" FontFamily="{StaticResource MathFont}" FontSize="14" />
+                                <TextBlock Text="u − Gv" Style="{StaticResource Caption}" HorizontalAlignment="Center" FontFamily="{StaticResource MathFont}" FontSize="14" />
+                            </UniformGrid>
+                            <TextBlock Text="{Binding CodeText}" Style="{StaticResource Body}" Margin="0,10,0,0" />
+                        </StackPanel>
+                        <sp:WpfPlot x:Name="CodePlot" Grid.Column="1" Height="200" Margin="12,0,0,0" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M7.Sparse.History}" Tip="{loc:Tr M7.Sparse.History.Tip}" />
+                    <sp:WpfPlot x:Name="HistoryPlot" Height="170" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</l:LessonView>

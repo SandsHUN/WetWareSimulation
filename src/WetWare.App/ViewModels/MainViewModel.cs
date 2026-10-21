@@ -1,7 +1,10 @@
+using System.ComponentModel;
+using System.Windows.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WetWare.App.Localization;
 using WetWare.App.Services;
+using WetWare.App.ViewModels.Course;
 
 namespace WetWare.App.ViewModels;
 
@@ -26,6 +29,9 @@ public sealed partial class MainViewModel : ObservableObject
     {
         _settings = settings;
         Pages = pages.ToList();
+        // The rail is split into the simulator labs and the course companion.
+        PagesView = new ListCollectionView(Pages.ToList());
+        PagesView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(PageViewModel.NavGroup)));
         _showGuide = settings.Current.ShowGuides;
         _showSimple = settings.Current.ShowSimple;
         _sidebarExpanded = settings.Current.SidebarExpanded;
@@ -40,6 +46,8 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     public IReadOnlyList<PageViewModel> Pages { get; }
+
+    public ICollectionView PagesView { get; }
 
     public bool IsHungarian
     {
@@ -75,11 +83,16 @@ public sealed partial class MainViewModel : ObservableObject
         _settings.Save();
     }
 
+    /// <summary>Opens a page; <c>Key/n</c> also selects lesson n of a course module.</summary>
     [RelayCommand]
     private void Navigate(string key)
     {
-        var page = Pages.FirstOrDefault(p => p.Key == key);
-        if (page is not null) CurrentPage = page;
+        string[] parts = key.Split('/');
+        var page = Pages.FirstOrDefault(p => p.Key == parts[0]);
+        if (page is null) return;
+        CurrentPage = page;
+        if (parts.Length > 1 && int.TryParse(parts[1], out int lesson) && page is CourseModuleViewModel module)
+            module.SelectLesson(lesson);
     }
 
     [RelayCommand]

@@ -1,0 +1,84 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.PredictiveCodingLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Callout}" Margin="6" Background="#14FBBF24" BorderBrush="#55FBBF24"
+                    Visibility="{Binding NeedsTraining, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel>
+                    <TextBlock Text="{loc:Tr M7.Predictive.Untrained}" Style="{StaticResource Body}" />
+                    <Button Content="{loc:Tr M7.Predictive.QuickTrain}" Command="{Binding QuickTrainCommand}" Margin="0,8,0,0" HorizontalAlignment="Left" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE8B9;" Title="{loc:Tr M7.Predictive.Stimulus}" Tip="{loc:Tr M7.Predictive.Stimulus.Tip}" />
+                    <Border Style="{StaticResource SegmentHost}" HorizontalAlignment="Left" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="Stim" Content="{loc:Tr M7.Predictive.Natural}" IsChecked="{Binding Stimulus, Converter={StaticResource Choice}, ConverterParameter=Natural}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="Stim" Content="{loc:Tr M7.Predictive.Edge}" IsChecked="{Binding Stimulus, Converter={StaticResource Choice}, ConverterParameter=Edge}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="Stim" Content="{loc:Tr M7.Predictive.Noise}" IsChecked="{Binding Stimulus, Converter={StaticResource Choice}, ConverterParameter=Noise}" />
+                        </StackPanel>
+                    </Border>
+                    <c:ParamSlider Label="{loc:Tr M7.Predictive.EdgeAngle}" Value="{Binding EdgeAngle}" Minimum="0" Maximum="180" Step="5" Unit="°" Decimals="0" />
+                    <WrapPanel Margin="0,6,0,0">
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding ReplayCommand}" Margin="0,0,6,6">
+                            <TextBlock Text="{loc:Tr M7.Predictive.Replay}" />
+                        </Button>
+                        <Button Content="{loc:Tr M7.Predictive.New}" Command="{Binding NewStimulusCommand}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                    <c:ParamSlider Label="{loc:Tr M7.Predictive.Iteration}" Tip="{loc:Tr M7.Predictive.Iteration.Tip}" Value="{Binding Iteration}" Minimum="0" Maximum="60" Step="1" Decimals="0" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE8F4;" Title="{loc:Tr M7.Predictive.Hierarchy}" Tip="{loc:Tr M7.Predictive.Hierarchy.Tip}" />
+                    <cc:HierarchyDiagram x:Name="Hierarchy" Height="300" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D9;" Title="{loc:Tr M7.Predictive.Loop}" Tip="{loc:Tr M7.Predictive.Loop.Tip}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Width="300">
+                            <cc:PatchGrid x:Name="Triplet" Height="100" Columns="3" Gap="2" />
+                            <UniformGrid Columns="3" Margin="0,4,0,0">
+                                <TextBlock Text="{loc:Tr M7.Predictive.Col.Input}" Style="{StaticResource Caption}" HorizontalAlignment="Center" />
+                                <TextBlock Text="{loc:Tr M7.Predictive.Col.Prediction}" Style="{StaticResource Caption}" HorizontalAlignment="Center" Foreground="{StaticResource AccentBrush}" />
+                                <TextBlock Text="{loc:Tr M7.Predictive.Col.Error}" Style="{StaticResource Caption}" HorizontalAlignment="Center" Foreground="{StaticResource ExcitatoryBrush}" />
+                            </UniformGrid>
+                        </StackPanel>
+                        <sp:WpfPlot x:Name="CausePlot" Grid.Column="1" Height="150" Margin="12,0,0,0" />
+                    </Grid>
+                    <TextBlock Text="{Binding Readout}" Style="{StaticResource Readout}" />
+                    <Border Style="{StaticResource LiveExplain}">
+                        <TextBlock Text="{Binding Explain}" Style="{StaticResource Body}" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M7.Predictive.Energy}" Tip="{loc:Tr M7.Predictive.Energy.Tip}" />
+                    <sp:WpfPlot x:Name="EnergyPlot" Height="240" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</l:LessonView>

@@ -37,6 +37,14 @@
                                     ToolTip="{loc:Tr Page.Scenarios.Tip}">
                                 <TextBlock Text="{loc:Tr Home.Experiments}" FontSize="14" />
                             </Button>
+                            <Button Command="{Binding OpenCommand}" CommandParameter="Course" Padding="18,10" Margin="10,0,0,0"
+                                    ToolTip="{loc:Tr Page.Course.Tip}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE7BE;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,8,0"
+                                               Foreground="{StaticResource Accent2Brush}" />
+                                    <TextBlock Text="{loc:Tr Home.Course}" FontSize="14" />
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                     </StackPanel>
                     <Grid Grid.Column="1" Margin="0,10,20,10">

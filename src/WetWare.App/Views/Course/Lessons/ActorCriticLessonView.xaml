@@ -1,0 +1,82 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.ActorCriticLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D5;" Title="{loc:Tr M8.ActorCritic.Mode}" Tip="{loc:Tr M8.ActorCritic.Mode.Tip}" />
+                    <Border Style="{StaticResource SegmentHost}" HorizontalAlignment="Left" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="AcMode" Content="{loc:Tr M8.ActorCritic.Evaluation}" IsChecked="{Binding Mode, Converter={StaticResource Choice}, ConverterParameter=Evaluation}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="AcMode" Content="Actor–Critic" IsChecked="{Binding Mode, Converter={StaticResource Choice}, ConverterParameter=ActorCritic}" />
+                        </StackPanel>
+                    </Border>
+                    <c:ParamSlider Label="β" Tip="{loc:Tr M8.ActorCritic.Beta.Tip}" Value="{Binding Beta}" Minimum="0" Maximum="5" Step="0.1" Decimals="1" />
+                    <c:ParamSlider Label="{loc:Tr M8.ActorCritic.CriticRate}" Value="{Binding CriticRate}" Minimum="0.02" Maximum="0.8" Step="0.01" Decimals="2" />
+                    <c:ParamSlider Label="{loc:Tr M8.ActorCritic.ActorRate}" Value="{Binding ActorRate}" Minimum="0.02" Maximum="0.8" Step="0.01" Decimals="2" />
+                    <c:ParamSlider Label="{loc:Tr Course.Speed}" Value="{Binding Speed}" Minimum="0.5" Maximum="20" Step="0.5" Unit="×" Decimals="1" />
+                    <WrapPanel Margin="0,6,0,0">
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding ToggleRunCommand}" Margin="0,0,6,6">
+                            <TextBlock Text="{loc:Tr Course.RunPause}" />
+                        </Button>
+                        <Button Content="{loc:Tr M8.ActorCritic.Trial}" Command="{Binding TrialCommand}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ResetCommand}" ToolTip="{loc:Tr Common.Reset.Tip}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE7C1;" Title="{loc:Tr M8.ActorCritic.Food}" Tip="{loc:Tr M8.ActorCritic.Food.Tip}" />
+                    <c:ParamSlider Label="B → L" Value="{Binding RewardBL}" Minimum="0" Maximum="6" Step="0.5" Decimals="1" />
+                    <c:ParamSlider Label="B → R" Value="{Binding RewardBR}" Minimum="0" Maximum="6" Step="0.5" Decimals="1" />
+                    <c:ParamSlider Label="C → L" Value="{Binding RewardCL}" Minimum="0" Maximum="6" Step="0.5" Decimals="1" />
+                    <c:ParamSlider Label="C → R" Value="{Binding RewardCR}" Minimum="0" Maximum="6" Step="0.5" Decimals="1" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE8F4;" Title="{loc:Tr M8.ActorCritic.Barn}" Tip="{loc:Tr M8.ActorCritic.Barn.Tip}" />
+                    <Border Style="{StaticResource InsetPanel}" Padding="6">
+                        <cc:BarnMazeControl x:Name="Barn" Height="340" />
+                    </Border>
+                    <TextBlock Text="{Binding Readout}" Style="{StaticResource Readout}" />
+                    <Border Style="{StaticResource LiveExplain}">
+                        <TextBlock Text="{Binding Explain}" Style="{StaticResource Body}" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M8.ActorCritic.Values}" Tip="{loc:Tr M8.ActorCritic.Values.Tip}" />
+                        <sp:WpfPlot x:Name="ValuePlot" Height="200" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M8.ActorCritic.Policy}" Tip="{loc:Tr M8.ActorCritic.Policy.Tip}" />
+                        <sp:WpfPlot x:Name="PolicyPlot" Height="200" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</l:LessonView>

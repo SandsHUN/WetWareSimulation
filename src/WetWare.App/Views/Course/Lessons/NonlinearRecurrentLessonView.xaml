@@ -1,0 +1,102 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.NonlinearRecurrentLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE945;" Title="{loc:Tr M6.Nonlinear.Scenarios}" Tip="{loc:Tr M6.Nonlinear.Scenarios.Tip}" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Nonlinear.Preset.Amplify}" Command="{Binding PresetCommand}" CommandParameter="Amplify" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Nonlinear.Preset.Wta}" Command="{Binding PresetCommand}" CommandParameter="Wta" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Nonlinear.Preset.Gain}" Command="{Binding PresetCommand}" CommandParameter="Gain" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Nonlinear.Preset.Memory}" Command="{Binding PresetCommand}" CommandParameter="Memory" />
+                    </WrapPanel>
+                    <Border Style="{StaticResource LiveExplain}" Margin="0,6,0,0">
+                        <TextBlock Text="{Binding Explain}" Style="{StaticResource Body}" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9E9;" Title="{loc:Tr M6.Nonlinear.Network}" Tip="{loc:Tr M6.Nonlinear.Network.Tip}" />
+                    <Border Style="{StaticResource SegmentHost}" HorizontalAlignment="Left" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="F" Content="{loc:Tr M6.Nonlinear.F.Linear}"
+                                         IsChecked="{Binding Nonlinearity, Converter={StaticResource Choice}, ConverterParameter=Linear}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="F" Content="[x]⁺"
+                                         IsChecked="{Binding Nonlinearity, Converter={StaticResource Choice}, ConverterParameter=Rectified}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="F" Content="{loc:Tr M6.Nonlinear.F.Saturating}"
+                                         IsChecked="{Binding Nonlinearity, Converter={StaticResource Choice}, ConverterParameter=Saturating}" />
+                        </StackPanel>
+                    </Border>
+                    <c:ParamSlider Label="{loc:Tr M6.Nonlinear.J1}" Tip="{loc:Tr M6.Nonlinear.J1.Tip}" Value="{Binding J1}" Minimum="0" Maximum="3.5" Step="0.05" Decimals="2" />
+                    <c:ParamSlider Label="{loc:Tr M6.Nonlinear.J0}" Tip="{loc:Tr M6.Nonlinear.J0.Tip}" Value="{Binding J0}" Minimum="0" Maximum="8" Step="0.1" Decimals="1" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE916;" Title="{loc:Tr M6.Nonlinear.InputCard}" />
+                    <c:ParamSlider Label="{loc:Tr M6.Nonlinear.Cue}" Tip="{loc:Tr M6.Nonlinear.Cue.Tip}" Value="{Binding Cue}" Minimum="-180" Maximum="180" Step="5" Unit="°" Decimals="0" />
+                    <c:ParamSlider Label="{loc:Tr M6.Nonlinear.Amplitude}" Value="{Binding Amplitude}" Minimum="0" Maximum="15" Step="0.5" Decimals="1" />
+                    <c:ParamSlider Label="{loc:Tr M6.Nonlinear.Background}" Tip="{loc:Tr M6.Nonlinear.Background.Tip}" Value="{Binding Background}" Minimum="-3" Maximum="8" Step="0.5" Decimals="1" />
+                    <c:ParamSlider Label="{loc:Tr M6.Nonlinear.Noise}" Value="{Binding Noise}" Minimum="0" Maximum="6" Step="0.1" Decimals="1" />
+                    <CheckBox Content="{loc:Tr M6.Nonlinear.SecondBump}" IsChecked="{Binding SecondBump}" Margin="0,4,0,6" />
+                    <CheckBox Content="{loc:Tr M6.Nonlinear.InputOn}" IsChecked="{Binding InputOn}" ToolTip="{loc:Tr M6.Nonlinear.InputOn.Tip}" Margin="0,0,0,10" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding ToggleRunCommand}" Margin="0,0,6,6">
+                            <TextBlock Text="{loc:Tr Course.RunPause}" />
+                        </Button>
+                        <Button Content="{loc:Tr M6.Nonlinear.Flash}" ToolTip="{loc:Tr M6.Nonlinear.Flash.Tip}" Command="{Binding FlashCueCommand}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ResetCommand}" ToolTip="{loc:Tr Common.Reset.Tip}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.2*" />
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE81E;" Title="{loc:Tr M6.Nonlinear.RingView}" Tip="{loc:Tr M6.Nonlinear.RingView.Tip}" />
+                        <cc:RingActivityControl x:Name="RingView" Height="300" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE9D9;" Title="{loc:Tr M6.Nonlinear.Peak}" Tip="{loc:Tr M6.Nonlinear.Peak.Tip}" />
+                        <sp:WpfPlot x:Name="PeakPlot" Height="300" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M6.Nonlinear.Profile}" Tip="{loc:Tr M6.Nonlinear.Profile.Tip}">
+                        <c:SectionHeader.Actions>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource ChipButton}" Margin="0,0,6,0" Content="{loc:Tr M6.Nonlinear.Freeze}" ToolTip="{loc:Tr M6.Nonlinear.Freeze.Tip}" Command="{Binding FreezeCommand}" />
+                                <Button Style="{StaticResource ChipButton}" Margin="0" Content="{loc:Tr Common.Clear}" Command="{Binding ClearSnapshotsCommand}" />
+                            </StackPanel>
+                        </c:SectionHeader.Actions>
+                    </c:SectionHeader>
+                    <sp:WpfPlot x:Name="ProfilePlot" Height="270" />
+                    <TextBlock Text="{Binding Readout}" Style="{StaticResource Readout}" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</l:LessonView>

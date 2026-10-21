@@ -1,0 +1,87 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.SynapseLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE945;" Title="{loc:Tr M6.Synapse.Types}" Tip="{loc:Tr M6.Synapse.Types.Tip}" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource ChipButton}" Content="AMPA" ToolTip="{loc:Tr M6.Synapse.Preset.AMPA}" Command="{Binding PresetCommand}" CommandParameter="AMPA" />
+                        <Button Style="{StaticResource ChipButton}" Content="GABA__A" ToolTip="{loc:Tr M6.Synapse.Preset.GABA}" Command="{Binding PresetCommand}" CommandParameter="GABA" />
+                        <Button Style="{StaticResource ChipButton}" Content="NMDA" ToolTip="{loc:Tr M6.Synapse.Preset.NMDA}" Command="{Binding PresetCommand}" CommandParameter="NMDA" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Synapse.Shunting}" ToolTip="{loc:Tr M6.Synapse.Preset.Shunting}" Command="{Binding PresetCommand}" CommandParameter="Shunting" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9E9;" Title="{loc:Tr M6.Synapse.Params}" />
+                    <c:ParamSlider Label="{loc:Tr M6.Synapse.Es}" Tip="{loc:Tr M6.Synapse.Es.Tip}" Value="{Binding Reversal}" Minimum="-90" Maximum="10" Step="1" Unit="mV" Decimals="0" />
+                    <c:ParamSlider Label="{loc:Tr M6.Synapse.Strength}" Tip="{loc:Tr M6.Synapse.Strength.Tip}" Value="{Binding Strength}" Minimum="0" Maximum="2" Step="0.05" Decimals="2" />
+                    <c:ParamSlider Label="{loc:Tr M6.Synapse.Tau}" Tip="{loc:Tr M6.Synapse.Tau.Tip}" Value="{Binding TauS}" Minimum="1" Maximum="80" Step="1" Unit="ms" Decimals="0" />
+                    <CheckBox Content="{loc:Tr M6.Synapse.Alpha}" IsChecked="{Binding AlphaKernel}" ToolTip="{loc:Tr M6.Synapse.Alpha.Tip}" Margin="0,4,0,8" />
+                    <sp:WpfPlot x:Name="KernelPlot" Height="150" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE916;" Title="{loc:Tr M6.Synapse.Input}" />
+                    <c:ParamSlider Label="{loc:Tr M6.Synapse.Rate}" Tip="{loc:Tr M6.Synapse.Rate.Tip}" Value="{Binding PreRate}" Minimum="0" Maximum="80" Step="1" Unit="Hz" Decimals="0" />
+                    <c:ParamSlider Label="{loc:Tr M6.Synapse.Background}" Tip="{loc:Tr M6.Synapse.Background.Tip}" Value="{Binding Background}" Minimum="0" Maximum="22" Step="0.5" Unit="mV" Decimals="1" />
+                    <CheckBox Content="{loc:Tr M6.Synapse.Poisson}" IsChecked="{Binding Poisson}" ToolTip="{loc:Tr M6.Synapse.Poisson.Tip}" Margin="0,4,0,10" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding ToggleRunCommand}" ToolTip="{loc:Tr Common.PlayPause.Tip}" Margin="0,0,6,6">
+                            <TextBlock Text="{loc:Tr Course.RunPause}" />
+                        </Button>
+                        <Button Content="{loc:Tr M6.Synapse.Inject}" ToolTip="{loc:Tr M6.Synapse.Inject.Tip}" Command="{Binding InjectCommand}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ResetCommand}" ToolTip="{loc:Tr Common.Reset.Tip}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D9;" Title="{loc:Tr M6.Synapse.Scope}" Tip="{loc:Tr M6.Synapse.Scope.Tip}" />
+                    <sp:WpfPlot x:Name="VoltagePlot" Height="240" />
+                    <sp:WpfPlot x:Name="ConductancePlot" Height="140" />
+                    <TextBlock Text="{Binding Readout}" Style="{StaticResource Readout}" />
+                    <Border Style="{StaticResource LiveExplain}">
+                        <TextBlock Text="{Binding Explain}" Style="{StaticResource Body}" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE8F4;" Title="{loc:Tr M6.Synapse.Pair}" Tip="{loc:Tr M6.Synapse.Pair.Tip}" />
+                    <DockPanel Margin="0,0,0,8">
+                        <Border DockPanel.Dock="Left" Style="{StaticResource SegmentHost}" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Style="{StaticResource SegmentItem}" Content="{loc:Tr M6.Synapse.Pair.Exc}" GroupName="PairMode"
+                                             IsChecked="{Binding PairExcitatory}" />
+                                <RadioButton Style="{StaticResource SegmentItem}" Content="{loc:Tr M6.Synapse.Pair.Inh}" GroupName="PairMode"
+                                             IsChecked="{Binding PairExcitatory, Converter={StaticResource InverseBool}}" />
+                            </StackPanel>
+                        </Border>
+                        <c:ParamSlider Label="{loc:Tr M6.Synapse.Pair.Strength}" Value="{Binding PairStrength}" Minimum="0" Maximum="0.3" Step="0.01" Decimals="2" Margin="16,0,0,0" />
+                    </DockPanel>
+                    <sp:WpfPlot x:Name="PairPlot" Height="210" />
+                    <Border Style="{StaticResource LiveExplain}">
+                        <TextBlock Text="{Binding PairText}" Style="{StaticResource Body}" />
+                    </Border>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</l:LessonView>

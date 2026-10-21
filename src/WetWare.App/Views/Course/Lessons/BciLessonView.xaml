@@ -1,0 +1,92 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.BciLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <StackPanel>
+        <!-- ============ A: artificial connection (FES) ============ -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE945;" Title="{loc:Tr M8.Bci.Fes}" Tip="{loc:Tr M8.Bci.Fes.Tip}" />
+                    <CheckBox Content="{loc:Tr M8.Bci.Enabled}" IsChecked="{Binding BciEnabled}" ToolTip="{loc:Tr M8.Bci.Enabled.Tip}" Margin="0,0,0,8" />
+                    <CheckBox Content="{loc:Tr M8.Bci.AutoTarget}" IsChecked="{Binding AutoTarget}" ToolTip="{loc:Tr M8.Bci.AutoTarget.Tip}" Margin="0,0,0,8" />
+                    <c:ParamSlider Label="{loc:Tr M8.Bci.Intent}" Tip="{loc:Tr M8.Bci.Intent.Tip}" Value="{Binding Intent}" Minimum="-1" Maximum="1" Step="0.05" Decimals="2"
+                                   IsEnabled="{Binding AutoTarget, Converter={StaticResource InverseBool}}" />
+                    <c:ParamSlider Label="{loc:Tr M8.Bci.Gain}" Tip="{loc:Tr M8.Bci.Gain.Tip}" Value="{Binding Gain}" Minimum="0" Maximum="0.3" Step="0.01" Unit="mA/Hz" Decimals="2" />
+                    <c:ParamSlider Label="{loc:Tr M8.Bci.Threshold}" Tip="{loc:Tr M8.Bci.Threshold.Tip}" Value="{Binding Threshold}" Minimum="0" Maximum="50" Step="1" Unit="Hz" Decimals="0" />
+                    <TextBlock Text="{Binding FesText}" Style="{StaticResource Readout}" />
+                </StackPanel>
+            </Border>
+            <StackPanel Grid.Column="1">
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE8F4;" Title="{loc:Tr M8.Bci.Loop}" Tip="{loc:Tr M8.Bci.Loop.Tip}" />
+                        <Border Style="{StaticResource InsetPanel}" Padding="6">
+                            <cc:BciLoopControl x:Name="Loop" Height="270" />
+                        </Border>
+                        <sp:WpfPlot x:Name="AnglePlot" Height="170" Margin="0,8,0,0" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+
+        <!-- ============ B: plasticity induction ============ -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D5;" Title="{loc:Tr M8.Bci.Conditioning}" Tip="{loc:Tr M8.Bci.Conditioning.Tip}" />
+                    <c:ParamSlider Label="{loc:Tr M8.Bci.Delay}" Tip="{loc:Tr M8.Bci.Delay.Tip}" Value="{Binding Delay}" Minimum="0" Maximum="100" Step="5" Unit="ms" Decimals="0" />
+                    <CheckBox Content="{loc:Tr M8.Bci.Random}" IsChecked="{Binding RandomControl}" ToolTip="{loc:Tr M8.Bci.Random.Tip}" Margin="0,4,0,10" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding NightCommand}" Margin="0,0,6,6" ToolTip="{loc:Tr M8.Bci.Night.Tip}">
+                            <TextBlock Text="{loc:Tr M8.Bci.Night}" />
+                        </Button>
+                        <Button Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ResetConditioningCommand}" ToolTip="{loc:Tr M8.Bci.ResetCond.Tip}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M8.Bci.ClearDelays}" Command="{Binding ClearDelaysCommand}" />
+                    </WrapPanel>
+                    <TextBlock Text="{Binding ConditioningText}" Style="{StaticResource Readout}" />
+                </StackPanel>
+            </Border>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE9D9;" Title="{loc:Tr M8.Bci.Sta}" Tip="{loc:Tr M8.Bci.Sta.Tip}" />
+                        <sp:WpfPlot x:Name="StaPlot" Height="200" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M8.Bci.Strength}" />
+                        <sp:WpfPlot x:Name="StrengthPlot" Height="200" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE8EF;" Title="{loc:Tr M8.Bci.Window}" Tip="{loc:Tr M8.Bci.Window.Tip}" />
+                        <sp:WpfPlot x:Name="WindowPlot" Height="190" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </StackPanel>
+</l:LessonView>

@@ -1,0 +1,84 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.LinearRecurrentLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE945;" Title="{loc:Tr Common.Examples}" Tip="{loc:Tr M6.Linear.Examples.Tip}" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Linear.Preset.Leaky}" Command="{Binding PresetCommand}" CommandParameter="Leaky" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Linear.Preset.Amplifier}" Command="{Binding PresetCommand}" CommandParameter="Amplifier" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Linear.Preset.Integrator}" Command="{Binding PresetCommand}" CommandParameter="Integrator" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Linear.Preset.Unstable}" Command="{Binding PresetCommand}" CommandParameter="Unstable" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9E9;" Title="{loc:Tr M6.Linear.Eigenvalue}" Tip="{loc:Tr M6.Linear.Eigenvalue.Tip}" />
+                    <c:ParamSlider Label="λ" Tip="{loc:Tr M6.Linear.Lambda.Tip}" Value="{Binding Lambda}" Minimum="-0.5" Maximum="1.05" Step="0.01" Decimals="2" />
+                    <Border Style="{StaticResource FormulaBox}" Margin="0,6,0,0">
+                        <TextBlock Text="{Binding GainText}" Style="{StaticResource FormulaText}" FontSize="15" />
+                    </Border>
+                    <c:ParamSlider Label="{loc:Tr M6.Linear.Sustained}" Tip="{loc:Tr M6.Linear.Sustained.Tip}" Value="{Binding Sustained}" Minimum="-0.3" Maximum="0.3" Step="0.01" Decimals="2" />
+                    <WrapPanel Margin="0,6,0,0">
+                        <Button Style="{StaticResource ChipButton}" Command="{Binding PulseCommand}" CommandParameter="-" ToolTip="{loc:Tr M6.Linear.Pulse.Tip}">
+                            <TextBlock Text="{loc:Tr M6.Linear.PulseLeft}" />
+                        </Button>
+                        <Button Style="{StaticResource ChipButton}" Command="{Binding PulseCommand}" CommandParameter="+" ToolTip="{loc:Tr M6.Linear.Pulse.Tip}">
+                            <TextBlock Text="{loc:Tr M6.Linear.PulseRight}" />
+                        </Button>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding ToggleRunCommand}" Margin="0,0,6,6" ToolTip="{loc:Tr Common.PlayPause.Tip}">
+                            <TextBlock Text="{loc:Tr Course.RunPause}" />
+                        </Button>
+                        <Button Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ResetCommand}" ToolTip="{loc:Tr Common.Reset.Tip}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE7B3;" Title="{loc:Tr M6.Linear.Eye}" Tip="{loc:Tr M6.Linear.Eye.Tip}" />
+                    <cc:EyeControl x:Name="Eye" Height="110" />
+                    <TextBlock Text="{loc:Tr M6.Linear.Eye.Text}" Style="{StaticResource Muted}" FontSize="12.5" Margin="0,8,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D9;" Title="{loc:Tr M6.Linear.Mode}" Tip="{loc:Tr M6.Linear.Mode.Tip}" />
+                    <sp:WpfPlot x:Name="ModePlot" Height="250" />
+                    <Border Style="{StaticResource LiveExplain}">
+                        <TextBlock Text="{Binding Explain}" Style="{StaticResource Body}" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE81E;" Title="{loc:Tr M6.Linear.Ring}" Tip="{loc:Tr M6.Linear.Ring.Tip}">
+                        <c:SectionHeader.Actions>
+                            <Button Style="{StaticResource ChipButton}" Margin="0" Content="{loc:Tr M6.Linear.NewNoise}" Command="{Binding NewNoiseCommand}" />
+                        </c:SectionHeader.Actions>
+                    </c:SectionHeader>
+                    <c:ParamSlider Label="{loc:Tr M6.Linear.Noise}" Value="{Binding Noise}" Minimum="0" Maximum="5" Step="0.1" Decimals="1" />
+                    <sp:WpfPlot x:Name="RingPlot" Height="250" />
+                    <TextBlock Text="{Binding RingText}" Style="{StaticResource Readout}" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</l:LessonView>

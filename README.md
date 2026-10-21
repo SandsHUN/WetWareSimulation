@@ -36,6 +36,21 @@ Grab `WetWareLab.exe` from the [latest release](https://github.com/SandsHUN/WetW
 
 The app starts in English; switch to Hungarian (and back) at any time with the toggle in the top-right corner – the choice is remembered.
 
+### Computational Neuroscience course companion
+
+A separate section of the menu turns modules 6–8 of the *Computational Neuroscience* course (lecturer: Rajesh Rao) into **14 interactive lessons**. Every lesson has a theory panel (concepts, key equations, biology, link to machine learning), a live lab, a "Remember" card and self-check questions with answers – in both languages.
+
+| Module | Lessons |
+|---|---|
+| **6 · Synapses & networks** | 6.1 conductance synapses (AMPA / GABA_A / NMDA / shunting) and two coupled neurons · 6.2 feedforward networks as filters (v = Wu, edge detection) · 6.3 linear recurrent networks: eigenmodes, 1/(1−λ) amplification, the oculomotor integrator · 6.4 nonlinear ring network: selective amplification, winner-takes-all, gain modulation, working memory · 6.5 E–I oscillations: phase plane, complex eigenvalues, damped oscillation vs limit cycle |
+| **7 · Plasticity & unsupervised learning** | 7.1 Hebb, covariance and Oja rules finding the principal component · 7.2 competitive learning, K-means and self-organizing maps · 7.3 generative models, Gaussian mixtures and EM (soft assignment, Bayes at the cursor, "dreamed" samples) · 7.4 sparse coding of natural images – V1-like edge features vs global PCA components · 7.5 predictive coding: prediction ↓ / error ↑ inference loop |
+| **8 · Supervised, reinforcement learning & BCI** | 8.1 perceptron, XOR and a backprop-trained MLP · 8.2 TD learning and the dopamine reward-prediction error · 8.3 actor–critic in the "rat in a barn" · 8.4 bidirectional BCI: cortex → FES bridge and spike-triggered conditioning with an STDP-like window |
+
+<table>
+<tr><td><img src="docs/screenshots/course.png" alt="Course overview"></td><td><img src="docs/screenshots/course-ring.png" alt="Nonlinear ring network"></td></tr>
+<tr><td><img src="docs/screenshots/course-sparse.png" alt="Sparse coding"></td><td><img src="docs/screenshots/course-bci.png" alt="Bidirectional BCI"></td></tr>
+</table>
+
 <table>
 <tr><td><img src="docs/screenshots/neuron-lab.png" alt="Neuron lab"></td><td><img src="docs/screenshots/vision.png" alt="Vision"></td></tr>
 <tr><td><img src="docs/screenshots/stdp-lab.png" alt="STDP lab"></td><td><img src="docs/screenshots/home.png" alt="Home"></td></tr>
@@ -64,7 +79,7 @@ The solution file is `WetWare.slnx`, which needs Visual Studio 2022 17.13+ or th
 
 ## Architecture
 
-- `src/WetWare.Core` – platform-independent simulation core (.NET 8, no UI dependencies): LIF neurons (explicit Euler, dt = 0.1 ms), Watts–Strogatz small-world network with delayed exponential current synapses, trace-based STDP, Tsodyks–Markram short-term depression, Poisson background noise, synchrony metrics, scenarios, neural coding, visual pathway and the spiking classifier.
+- `src/WetWare.Core` – platform-independent simulation core (.NET 8, no UI dependencies): LIF neurons (explicit Euler, dt = 0.1 ms), Watts–Strogatz small-world network with delayed exponential current synapses, trace-based STDP, Tsodyks–Markram short-term depression, Poisson background noise, synchrony metrics, scenarios, neural coding, visual pathway and the spiking classifier. `Course/` holds the models of the course lessons (conductance synapses, rate networks, Hebbian / competitive / EM / sparse learning, perceptron and MLP, TD and actor–critic, BCI).
 - `src/WetWare.App` – WPF client (MVVM with CommunityToolkit.Mvvm, ScottPlot 5, custom `WriteableBitmap` renderers for the raster plot, graph and heatmaps). The simulation advances once per rendered frame.
 - `tests/WetWare.Core.Tests` – xUnit tests that check the model against theory: analytic LIF firing rate, STDP window, Pavlovian learning, seizure synchronisation, vision filters, recognition accuracy.
 
@@ -72,7 +87,7 @@ The original design ([Specifications/wetware_specifications.md](Specifications/w
 
 ### Localization
 
-All UI text lives in `src/WetWare.App/Localization/Strings/en.json` and `hu.json` (identical keys). In XAML: `{loc:Tr Some.Key}`. Adding a language means adding one JSON file.
+All UI text lives in `src/WetWare.App/Localization/Strings/en.json` and `hu.json` (identical keys); the course texts are in `Strings/Course/*.en.json` / `*.hu.json` and are merged at start-up. In XAML: `{loc:Tr Some.Key}`. A course lesson's theory panel is built from its keys (`M7.Sparse.Title`, `.Lead`, `.C1.Title` / `.C1.Text`, `.Formulas`, `.Q1` / `.A1`, …). Adding a language means adding one JSON file.
 
 ### Developer switches
 
@@ -80,7 +95,7 @@ All UI text lives in `src/WetWare.App/Localization/Strings/en.json` and `hu.json
 WetWareLab.exe --lang en --page Network --scenario Seizure --snapshot out.png --delay 5000
 ```
 
-`--train 900` pre-trains the digit classifier and starts recognising a digit. The command opens a page, optionally starts a scenario, saves a screenshot after the delay and exits – used for automated visual checks. Page keys: `Home`, `Neuron`, `Network`, `Stdp`, `Coding`, `Vision`, `Recognition`, `Scenarios`, `Glossary`.
+`--train 900` pre-trains the digit classifier and starts recognising a digit. The command opens a page, optionally starts a scenario, saves a screenshot after the delay and exits – used for automated visual checks. Page keys: `Home`, `Neuron`, `Network`, `Stdp`, `Coding`, `Vision`, `Recognition`, `Scenarios`, `Glossary`, `Course`, `M6`, `M7`, `M8`; `--page M7/3` opens lesson 7.4 (zero-based lesson index).
 
 ## References
 
@@ -93,6 +108,13 @@ WetWareLab.exe --lang en --page Network --scenario Seizure --snapshot out.png --
 - Brunel (2000), *J. Comput. Neurosci.* 8:183 – balanced E/I networks
 - Diehl & Cook (2015), *Front. Comput. Neurosci.* 9:99 – unsupervised digit recognition with STDP
 - Hubel & Wiesel (1962), *J. Physiol.* 160:106 – receptive fields in visual cortex
+- Dayan & Abbott: *Theoretical Neuroscience* (2001) – synapses, rate networks, plasticity, reinforcement learning (course lessons)
+- Oja (1982), *J. Math. Biol.* 15:267 – a simplified neuron model as a principal component analyzer
+- Olshausen & Field (1996), *Nature* 381:607 – sparse coding of natural images
+- Rao & Ballard (1999), *Nat. Neurosci.* 2:79 – predictive coding in the visual cortex
+- Schultz, Dayan & Montague (1997), *Science* 275:1593 – dopamine and reward prediction error
+- Jackson, Mavoori & Fetz (2006), *Nature* 444:56 – motor cortex plasticity induced by an electronic neural implant
+- Moritz, Perlmutter & Fetz (2008), *Nature* 456:639 – direct control of paralysed muscles by cortical neurons
 
 ## Contributing
 

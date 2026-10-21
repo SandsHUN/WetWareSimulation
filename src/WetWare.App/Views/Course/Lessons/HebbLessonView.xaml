@@ -1,0 +1,92 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.HebbLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE945;" Title="{loc:Tr Common.Examples}" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M7.Hebb.Preset.Hebb}" Command="{Binding PresetCommand}" CommandParameter="Hebb" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M7.Hebb.Preset.Oja}" Command="{Binding PresetCommand}" CommandParameter="Oja" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M7.Hebb.Preset.Offset}" Command="{Binding PresetCommand}" CommandParameter="Offset" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M7.Hebb.Preset.Covariance}" Command="{Binding PresetCommand}" CommandParameter="Covariance" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M7.Hebb.Preset.Clusters}" Command="{Binding PresetCommand}" CommandParameter="Clusters" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D5;" Title="{loc:Tr M7.Hebb.Rule}" Tip="{loc:Tr M7.Hebb.Rule.Tip}" />
+                    <Border Style="{StaticResource SegmentHost}" HorizontalAlignment="Left" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="Rule" Content="Hebb" IsChecked="{Binding Rule, Converter={StaticResource Choice}, ConverterParameter=Hebb}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="Rule" Content="{loc:Tr M7.Hebb.Cov}" IsChecked="{Binding Rule, Converter={StaticResource Choice}, ConverterParameter=Covariance}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="Rule" Content="Oja" IsChecked="{Binding Rule, Converter={StaticResource Choice}, ConverterParameter=Oja}" />
+                        </StackPanel>
+                    </Border>
+                    <c:ParamSlider Label="{loc:Tr M7.Hebb.Epsilon}" Tip="{loc:Tr M7.Hebb.Epsilon.Tip}" Value="{Binding LearningRate}" Minimum="0.001" Maximum="0.05" Step="0.001" Decimals="3" />
+                    <c:ParamSlider Label="α (Oja)" Tip="{loc:Tr M7.Hebb.Alpha.Tip}" Value="{Binding Alpha}" Minimum="0.25" Maximum="4" Step="0.05" Decimals="2" />
+                    <c:ParamSlider Label="{loc:Tr Course.Speed}" Value="{Binding Speed}" Minimum="1" Maximum="30" Step="1" Unit="/frame" Decimals="0" />
+                    <WrapPanel Margin="0,6,0,0">
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding ToggleRunCommand}" Margin="0,0,6,6">
+                            <TextBlock Text="{loc:Tr Course.RunPause}" />
+                        </Button>
+                        <Button Content="{loc:Tr Course.Step}" Command="{Binding StepOnceCommand}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ResetCommand}" ToolTip="{loc:Tr M7.Hebb.Reset.Tip}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE81E;" Title="{loc:Tr M7.Hebb.Data}" Tip="{loc:Tr M7.Hebb.Data.Tip}" />
+                    <c:ParamSlider Label="{loc:Tr M7.Hebb.Angle}" Value="{Binding CloudAngle}" Minimum="-90" Maximum="90" Step="5" Unit="°" Decimals="0" />
+                    <c:ParamSlider Label="{loc:Tr M7.Hebb.Elongation}" Value="{Binding Elongation}" Minimum="1" Maximum="6" Step="0.1" Decimals="1" />
+                    <c:ParamSlider Label="{loc:Tr M7.Hebb.Offset}" Tip="{loc:Tr M7.Hebb.Offset.Tip}" Value="{Binding Offset}" Minimum="0" Maximum="2.5" Step="0.1" Decimals="1" />
+                    <CheckBox Content="{loc:Tr M7.Hebb.TwoClusters}" IsChecked="{Binding TwoClusters}" ToolTip="{loc:Tr M7.Hebb.TwoClusters.Tip}" Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE7B3;" Title="{loc:Tr M7.Hebb.Plane}" Tip="{loc:Tr M7.Hebb.Plane.Tip}" />
+                    <cc:PlaneCanvas x:Name="Plane" Height="400" />
+                    <TextBlock Text="{Binding Readout}" Style="{StaticResource Readout}" />
+                    <Border Style="{StaticResource LiveExplain}">
+                        <TextBlock Text="{Binding Explain}" Style="{StaticResource Body}" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M7.Hebb.NormPlot}" Tip="{loc:Tr M7.Hebb.NormPlot.Tip}" />
+                        <sp:WpfPlot x:Name="NormPlot" Height="190" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M7.Hebb.AnglePlot}" Tip="{loc:Tr M7.Hebb.AnglePlot.Tip}" />
+                        <sp:WpfPlot x:Name="AnglePlot" Height="190" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</l:LessonView>

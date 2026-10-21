@@ -4,17 +4,23 @@
              xmlns:vm="clr-namespace:WetWare.App.ViewModels"
              xmlns:views="clr-namespace:WetWare.App.Views"
              xmlns:c="clr-namespace:WetWare.App.Controls"
+             xmlns:course="clr-namespace:WetWare.App.ViewModels.Course"
+             xmlns:cv="clr-namespace:WetWare.App.Views.Course"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/Controls.xaml" />
+                <ResourceDictionary Source="Themes/Course.xaml" />
+                <ResourceDictionary Source="Views/Course/LessonTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
             <c:InverseBoolConverter x:Key="InverseBool" />
             <c:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility" />
             <c:EqualsConverter x:Key="Equals" />
+            <c:NotNullToVisibilityConverter x:Key="NotNullToVisibility" />
+            <c:ChoiceConverter x:Key="Choice" />
 
             <DataTemplate DataType="{x:Type vm:HomeViewModel}"><views:HomeView /></DataTemplate>
             <DataTemplate DataType="{x:Type vm:NeuronLabViewModel}"><views:NeuronLabView /></DataTemplate>
@@ -25,6 +31,10 @@
             <DataTemplate DataType="{x:Type vm:RecognitionViewModel}"><views:RecognitionView /></DataTemplate>
             <DataTemplate DataType="{x:Type vm:ScenariosViewModel}"><views:ScenariosView /></DataTemplate>
             <DataTemplate DataType="{x:Type vm:GlossaryViewModel}"><views:GlossaryView /></DataTemplate>
+            <DataTemplate DataType="{x:Type course:CourseHubViewModel}"><cv:CourseHubView /></DataTemplate>
+            <DataTemplate DataType="{x:Type course:Module6ViewModel}"><cv:CourseModuleView /></DataTemplate>
+            <DataTemplate DataType="{x:Type course:Module7ViewModel}"><cv:CourseModuleView /></DataTemplate>
+            <DataTemplate DataType="{x:Type course:Module8ViewModel}"><cv:CourseModuleView /></DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

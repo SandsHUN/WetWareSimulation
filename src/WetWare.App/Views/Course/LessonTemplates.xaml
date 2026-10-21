@@ -1,0 +1,20 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ls="clr-namespace:WetWare.App.ViewModels.Course.Lessons"
+                    xmlns:lv="clr-namespace:WetWare.App.Views.Course.Lessons">
+    <!-- Lesson view model → lab view. -->
+    <DataTemplate DataType="{x:Type ls:SynapseLesson}"><lv:SynapseLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:FeedforwardLesson}"><lv:FeedforwardLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:LinearRecurrentLesson}"><lv:LinearRecurrentLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:NonlinearRecurrentLesson}"><lv:NonlinearRecurrentLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:OscillationLesson}"><lv:OscillationLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:HebbLesson}"><lv:HebbLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:CompetitiveLesson}"><lv:CompetitiveLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:MixtureLesson}"><lv:MixtureLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:SparseCodingLesson}"><lv:SparseCodingLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:PredictiveCodingLesson}"><lv:PredictiveCodingLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:PerceptronLesson}"><lv:PerceptronLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:TdLesson}"><lv:TdLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:ActorCriticLesson}"><lv:ActorCriticLessonView /></DataTemplate>
+    <DataTemplate DataType="{x:Type ls:BciLesson}"><lv:BciLessonView /></DataTemplate>
+</ResourceDictionary>

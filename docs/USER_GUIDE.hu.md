@@ -20,6 +20,7 @@ A WetWare Lab szabad szoftver, [MIT licenc](../LICENSE) alatt. A program és a f
 - [Felismerés](#felismerés)
 - [Kísérletek](#kísérletek)
 - [Fogalomtár](#fogalomtár)
+- [Számításos idegtudomány kurzus](#számításos-idegtudomány-kurzus)
 - [Tippek tanároknak](#tippek-tanároknak)
 
 ---
@@ -246,10 +247,47 @@ Minden kártya leírja a jelenséget, hogy **mit figyelj meg**, és **a protokol
 
 ---
 
+## Számításos idegtudomány kurzus
+
+![Kurzus áttekintés](screenshots/hu/course.png)
+
+> **Egyszerűen:** tankönyv, amiben kísérletezni is lehet. A programnak ez a része egy számításos idegtudományi kurzus utolsó három modulját követi: hogyan kapcsolódnak a neuronok hálózattá (6), hogyan tanulnak a kapcsolatok a tapasztalatból (7), és hogyan tanul az agy példákból és jutalmakból – illetve hogyan köthető össze gépekkel (8).
+
+A menü alján található **Számításos idegtudomány kurzus** szekció külön oktatási egység. A *Kurzus áttekintés* oldal felsorolja a három modult és a 14 leckét; egy lecke címére kattintva egyből oda ugorhatsz.
+
+**Egy lecke felépítése**
+- **Leckeléptető** (felül): a modul száma és leckéi (6.1, 6.2, …). Kattintással válthatsz.
+- **Elmélet** (bal oldalt): rövid bevezető, fogalmi blokkok, a kulcsegyenletek közérthető olvasattal, *Biológia* megjegyzés és *Kapcsolat a gépi tanulással*.
+- **Labor** (jobb oldalt): élő szimuláció példákkal, csúszkákkal és grafikonokkal. Minden grafikonhoz és vezérlőhöz tooltip tartozik.
+- **Jegyezd meg** és **Önellenőrzés** (alul): a lényeg és a kurzusjegyzet önellenőrző kérdései. Kattints egy kérdésre a válaszért.
+- A sárga **Egyszerűen** doboz és az **Útmutató** panel mindig az aktuális leckéhez igazodik.
+
+| Lecke | Mit érdemes kipróbálni |
+|---|---|
+| 6.1 Szinapszis | Válts AMPA, GABA_A, NMDA és söntölő szinapszis között, és figyeld a membránt; kapcsolj össze két neuront serkentő vagy gátló szinapszissal (váltakozás vagy szinkron). |
+| 6.2 Feedforward | Vidd az egeret az output neuronok fölé a súlyaikért; a derivált kernel egy csíkból két élválaszt csinál. |
+| 6.3 Lineáris recurrent | Állítsd λ-t 0,9-re (erősítő) vagy 1,0-ra (integrátor), és küldj impulzusokat – λ = 1-nél a szem tartja a tekintetét. |
+| 6.4 Nemlineáris recurrent | Szelektív erősítés, winner-takes-all, gain modulation és munkamemória egy 72 neuronos gyűrűn. |
+| 6.5 Oszcillációk | Húzd τ_I-t 40 ms-on át: a sajátértékek átlépik a Re = 0 vonalat, a spirálból határciklus lesz. |
+| 7.1 Hebb és Oja | A Hebb-szabály felrobban, az Oja-szabály a főtengelyre áll be; két klaszter mutatja, hol bukik el a PCA. |
+| 7.2 Klaszterezés | Competitive learning, K-means és önszerveződő térkép; kattintással új klasztereket adhatsz hozzá. |
+| 7.3 Generatív és EM | Lépj végig az E- és M-lépéseken; az egérrel prior / likelihood / posterior; „álomminták” generálása. |
+| 7.4 Sparse coding | Figyeld, ahogy 64 véletlen bázisfüggvény V1-szerű élekké alakul; hasonlítsd össze a PCA-val. |
+| 7.5 Predictive coding | Játszd vissza az inference-hurkot; az élt jól megjósolja, a zaj nagy hibát hagy. |
+| 8.1 Perceptron és MLP | A perceptron megoldja az AND / OR feladatot, de az XOR-t nem; az MLP rejtett egységei meghajlítják a határt. |
+| 8.2 TD és dopamin | A predikciós hiba a jutalomtól a jelzőingerhez vándorol; a jutalom elmaradása horpadást okoz. |
+| 8.3 Actor–critic | Policy evaluation, majd a legjobb út actor–critic tanulása; mozgasd az ételt. |
+| 8.4 Kétirányú BCI | Kéreg → FES mozgat egy bénult csuklót; a spike-triggered kondicionálás a késleltetéstől függően erősít egy kapcsolatot. |
+
+![Sparse coding lecke](screenshots/hu/course-sparse.png)
+
+---
+
 ## Tippek tanároknak
 
 - **Egy 45 perces óra:** Kezdőlap (5 perc) → Neuron labor: lyukas vödör és küszöb (10 perc) → Hálózat: egyensúly és roham (10 perc) → Kísérletek: Pavlov (10 perc) → Felismerés (10 perc).
 - Kezdőknek kapcsold be a sárga **Egyszerűen** dobozokat, haladóknak kikapcsolhatod őket.
 - A **szünet** és a **Bio-Debugger** segítségével kivetítőn közösen végig lehet menni a számoláson.
 - A nyelv óra közben is átváltható, ez kétnyelvű csoportoknál hasznos.
+- A kurzusleckék egyetemi szemináriumhoz illenek: az elméleti panel kiadható olvasmánynak, a labor bemutatható, az önellenőrző kérdések pedig vitaindítónak használhatók.
 - Mivel az app MIT licences, szabadon felmásolhatod a tanterem összes gépére, odaadhatod a diákoknak, lefordíthatod, vagy a forráskódját a saját kurzusodhoz igazíthatod.

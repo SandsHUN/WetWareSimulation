@@ -18,6 +18,7 @@ WetWare Lab is free software under the [MIT license](../LICENSE). You may use, c
 - [Recognition](#recognition)
 - [Experiments](#experiments)
 - [Glossary](#glossary)
+- [Computational Neuroscience course](#computational-neuroscience-course)
 - [Tips for teachers](#tips-for-teachers)
 
 ---
@@ -244,10 +245,47 @@ Each card describes the phenomenon, **what to watch for** and **the protocol** (
 
 ---
 
+## Computational Neuroscience course
+
+![Course overview](screenshots/course.png)
+
+> **In plain words:** a study companion with experiments. This part of the program follows the last three modules of a computational neuroscience course: how neurons connect into networks (6), how connections learn from experience (7), and how a brain learns from examples and rewards – and how it can be linked to machines (8).
+
+The **Computational Neuroscience course** section at the bottom of the menu is a separate teaching unit. *Course overview* lists the three modules and their 14 lessons; click a lesson title to jump straight into it.
+
+**How a lesson page is built**
+- **Lesson stepper** (top): the module number and its lessons (6.1, 6.2, …). Click to switch.
+- **Theory** (left): a short lead, concept blocks, the key equations with their plain-language reading, a *Biology* note and a *Link to machine learning*.
+- **Lab** (right): a live simulation with examples, sliders and charts. Every chart and control has a tooltip.
+- **Remember** and **Check yourself** (bottom): the essential points and the self-check questions of the course notes. Click a question to reveal the answer.
+- The yellow **In plain words** box and the **Guide** panel always follow the current lesson.
+
+| Lesson | What to try |
+|---|---|
+| 6.1 Synapse | Switch between AMPA, GABA_A, NMDA and shunting synapses and watch the membrane; couple two neurons with excitatory or inhibitory synapses (alternation vs synchrony). |
+| 6.2 Feedforward | Hover output neurons to see their weights; the derivative kernel turns a bar into two edge responses. |
+| 6.3 Linear recurrent | Set λ to 0.9 (amplifier) or 1.0 (integrator) and send pulses – the eye holds its gaze at λ = 1. |
+| 6.4 Nonlinear recurrent | Selective amplification, winner-takes-all, gain modulation and working memory on a 72-neuron ring. |
+| 6.5 Oscillations | Drag τ_I across 40 ms: the eigenvalues cross Re = 0 and the spiral becomes a limit cycle. |
+| 7.1 Hebb & Oja | Hebb explodes, Oja settles on the principal axis; two clusters show where PCA fails. |
+| 7.2 Clustering | Competitive learning, K-means and a self-organizing map; click to add clusters. |
+| 7.3 Generative & EM | Step through E and M; hover for prior / likelihood / posterior; generate "dream" samples. |
+| 7.4 Sparse coding | Watch 64 random basis functions turn into V1-like edges; compare with PCA. |
+| 7.5 Predictive coding | Replay the inference loop; an edge is predicted well, noise leaves a large error. |
+| 8.1 Perceptron & MLP | The perceptron solves AND / OR but not XOR; the MLP's hidden units bend the boundary. |
+| 8.2 TD & dopamine | The prediction error moves from the reward to the cue; omitting the reward gives a dip. |
+| 8.3 Actor–critic | Policy evaluation, then actor–critic learning of the best route; move the food. |
+| 8.4 Bidirectional BCI | Cortex → FES drives a paralysed wrist; spike-triggered conditioning strengthens a connection depending on the delay. |
+
+![Sparse coding lesson](screenshots/course-sparse.png)
+
+---
+
 ## Tips for teachers
 
 - **A 45-minute lesson:** Home (5 min) → Neuron lab, leaky bucket and threshold (10 min) → Network, balance and seizure (10 min) → Experiments: Pavlov (10 min) → Recognition (10 min).
 - Switch the yellow **In plain words** boxes on for beginners and off for advanced students.
 - Use **pause** and the **Bio-Debugger** to go through the arithmetic together on a projector.
 - The language can be switched in the middle of a lesson, which is handy in bilingual classes.
+- The course lessons suit a university seminar: assign the theory panel as reading, demonstrate the lab, and use the self-check questions for discussion.
 - Because the app is MIT-licensed, you may copy it to every computer in the classroom, share it with students, translate it or adapt the source code for your own course.

@@ -1,0 +1,227 @@
+<UserControl x:Class="WetWare.App.Views.Course.CourseModuleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:WetWare.App.Localization"
+             xmlns:c="clr-namespace:WetWare.App.Controls"
+             xmlns:course="clr-namespace:WetWare.App.ViewModels.Course">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- ============ Module strip: number + lesson stepper ============ -->
+        <Border Margin="6,0,6,6" CornerRadius="16" Background="{Binding HeroGradient}" BorderBrush="{StaticResource BorderStrongBrush}"
+                BorderThickness="1" Padding="14,12">
+            <DockPanel>
+                <Border DockPanel.Dock="Left" Width="58" Height="58" CornerRadius="17" Background="{Binding AccentGradient}" VerticalAlignment="Center">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="22" ShadowDepth="0" Opacity="0.55" Color="{Binding AccentColor}" />
+                    </Border.Effect>
+                    <TextBlock Text="{Binding ModuleNumber}" FontFamily="{StaticResource DisplayFont}" FontSize="30" FontWeight="Bold"
+                               Foreground="#06101F" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,2" />
+                </Border>
+                <StackPanel DockPanel.Dock="Left" Margin="14,0,18,0" VerticalAlignment="Center" MinWidth="120">
+                    <TextBlock Text="{Binding ModuleLabel}" FontSize="11" FontWeight="Bold" Foreground="{Binding AccentBrush}" />
+                    <TextBlock Text="{Binding ProgressText}" Style="{StaticResource Caption}" FontWeight="Normal" Margin="0,3,0,0" />
+                </StackPanel>
+                <ListBox ItemsSource="{Binding Lessons}" SelectedItem="{Binding SelectedLesson, Mode=TwoWay}" ItemContainerStyle="{StaticResource LessonStepItem}"
+                         Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VerticalAlignment="Center">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type course:LessonViewModel}">
+                            <StackPanel Orientation="Horizontal" ToolTip="{Binding Title}">
+                                <TextBlock Text="{Binding Number}" FontFamily="{StaticResource MonoFont}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"
+                                           Foreground="{Binding DataContext.AccentBrush, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                <TextBlock Text="{Binding Short}" FontSize="13" Margin="8,0,0,0" VerticalAlignment="Center"
+                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <ScrollViewer x:Name="Scroller" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ============ Theory ============ -->
+                <Border Style="{StaticResource Card}" Padding="20,18" VerticalAlignment="Top" DataContext="{Binding SelectedLesson}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border CornerRadius="8" Padding="9,3" Background="{Binding DataContext.AccentSoft, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                <TextBlock FontFamily="{StaticResource MonoFont}" FontWeight="Bold" FontSize="12"
+                                           Foreground="{Binding DataContext.AccentBrush, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                    <Run Text="{loc:Tr Course.Lesson}" /><Run Text=" " /><Run Text="{Binding Number, Mode=OneWay}" />
+                                </TextBlock>
+                            </Border>
+                            <TextBlock Text="{loc:Tr Course.Theory}" Style="{StaticResource Caption}" Margin="10,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding Title}" Style="{StaticResource H2}" FontSize="23" Margin="0,12,0,0" LineHeight="30" />
+                        <TextBlock Text="{Binding Lead}" Style="{StaticResource Reading}" FontSize="14.5" LineHeight="23" Foreground="{StaticResource TextBrush}" Margin="0,10,0,6" />
+
+                        <ItemsControl ItemsSource="{Binding Concepts}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type course:ConceptBlock}">
+                                    <DockPanel Margin="0,12,0,0">
+                                        <Border DockPanel.Dock="Left" Width="3" CornerRadius="2" Margin="0,3,12,3"
+                                                Background="{Binding DataContext.AccentGradient, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Title}" Style="{StaticResource ConceptTitle}" />
+                                            <TextBlock Text="{Binding Text}" Style="{StaticResource Reading}" Margin="0,4,0,0" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,20,0,10">
+                            <TextBlock Text="&#xE94C;" FontFamily="{StaticResource IconFont}" FontSize="13" VerticalAlignment="Center"
+                                       Foreground="{Binding DataContext.AccentBrush, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                            <TextBlock Text="{loc:Tr Course.Equations}" Style="{StaticResource Caption}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding Formulas}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type course:FormulaLine}">
+                                    <Border Style="{StaticResource FormulaBox}">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Formula}" Style="{StaticResource FormulaText}" />
+                                            <TextBlock Text="{Binding Meaning}" Style="{StaticResource Muted}" FontSize="12.5" LineHeight="18" Margin="0,5,0,0"
+                                                       Visibility="{Binding Meaning, Converter={StaticResource NotNullToVisibility}}" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border Style="{StaticResource Callout}" Background="#0D34D399" BorderBrush="#3334D399" Margin="0,12,0,8"
+                                Visibility="{Binding HasBiology, Converter={StaticResource BoolToVisibility}}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE9D9;" FontFamily="{StaticResource IconFont}" Foreground="{StaticResource SuccessBrush}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{loc:Tr Course.Biology}" Foreground="{StaticResource SuccessBrush}" FontWeight="SemiBold" Margin="8,0,0,0" />
+                                </StackPanel>
+                                <TextBlock Text="{Binding Biology}" Style="{StaticResource Reading}" Margin="0,6,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Callout}" Background="#0DA78BFA" BorderBrush="#33A78BFA"
+                                Visibility="{Binding HasMachineLearning, Converter={StaticResource BoolToVisibility}}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE950;" FontFamily="{StaticResource IconFont}" Foreground="{StaticResource Accent2Brush}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{loc:Tr Course.MachineLearning}" Foreground="{StaticResource Accent2Brush}" FontWeight="SemiBold" Margin="8,0,0,0" />
+                                </StackPanel>
+                                <TextBlock Text="{Binding MachineLearning}" Style="{StaticResource Reading}" Margin="0,6,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- ============ Lab + recap ============ -->
+                <StackPanel Grid.Column="1">
+                    <ContentControl Content="{Binding SelectedLesson}" Focusable="False" />
+
+                    <Grid DataContext="{Binding SelectedLesson}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="1.25*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <c:SectionHeader Glyph="&#xE734;" Title="{loc:Tr Course.Takeaways}" Tip="{loc:Tr Course.Takeaways.Tip}" />
+                                <ItemsControl ItemsSource="{Binding Takeaways}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel Margin="0,0,0,9">
+                                                <Border DockPanel.Dock="Left" Width="20" Height="20" CornerRadius="10" Margin="0,1,10,0" VerticalAlignment="Top"
+                                                        Background="{Binding DataContext.AccentSoft, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                    <TextBlock Text="&#xE73E;" FontFamily="{StaticResource IconFont}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                               Foreground="{Binding DataContext.AccentBrush, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                                </Border>
+                                                <TextBlock Text="{Binding}" Style="{StaticResource Reading}" />
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource Card}">
+                            <StackPanel>
+                                <c:SectionHeader Glyph="&#xE9CE;" Title="{loc:Tr Course.Quiz}" Tip="{loc:Tr Course.Quiz.Tip}" />
+                                <ItemsControl ItemsSource="{Binding Quiz}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type course:QuizItem}">
+                                            <ToggleButton Style="{StaticResource QuizToggle}" IsChecked="{Binding IsOpen}" ToolTip="{loc:Tr Course.Quiz.Reveal}">
+                                                <DockPanel>
+                                                    <TextBlock DockPanel.Dock="Left" Text="{Binding Number}" FontFamily="{StaticResource MonoFont}" FontWeight="Bold" Width="22"
+                                                               Foreground="{Binding DataContext.AccentBrush, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                                    <TextBlock DockPanel.Dock="Right" FontFamily="{StaticResource IconFont}" FontSize="11" Margin="8,3,0,0" VerticalAlignment="Top"
+                                                               Foreground="{StaticResource TextFaintBrush}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Text" Value="&#xE70D;" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsOpen}" Value="True">
+                                                                        <Setter Property="Text" Value="&#xE70E;" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Question}" Style="{StaticResource Body}" FontWeight="SemiBold" />
+                                                        <DockPanel Margin="0,7,0,0" Visibility="{Binding IsOpen, Converter={StaticResource BoolToVisibility}}">
+                                                            <TextBlock DockPanel.Dock="Left" Text="&#xE73E;" FontFamily="{StaticResource IconFont}" FontSize="11"
+                                                                       Foreground="{StaticResource SuccessBrush}" Margin="0,4,8,0" VerticalAlignment="Top" />
+                                                            <TextBlock Text="{Binding Answer}" Style="{StaticResource Reading}" />
+                                                        </DockPanel>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                            </ToggleButton>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Previous / next lesson -->
+                    <Grid Margin="6,4,6,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button HorizontalAlignment="Left" Padding="14,9" Command="{Binding PreviousCommand}"
+                                Visibility="{Binding HasPrevious, Converter={StaticResource BoolToVisibility}}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE72B;" FontFamily="{StaticResource IconFont}" FontSize="11" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                <StackPanel>
+                                    <TextBlock Text="{loc:Tr Course.Previous}" Style="{StaticResource Caption}" FontWeight="Normal" />
+                                    <TextBlock Text="{Binding PreviousTitle}" FontWeight="SemiBold" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="1" HorizontalAlignment="Right" Padding="14,9" Command="{Binding NextCommand}" Style="{StaticResource PrimaryButton}"
+                                Visibility="{Binding HasNext, Converter={StaticResource BoolToVisibility}}">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel>
+                                    <TextBlock Text="{loc:Tr Course.Next}" FontSize="11" Opacity="0.75" />
+                                    <TextBlock Text="{Binding NextTitle}" FontWeight="SemiBold" />
+                                </StackPanel>
+                                <TextBlock Text="&#xE72A;" FontFamily="{StaticResource IconFont}" FontSize="11" VerticalAlignment="Center" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

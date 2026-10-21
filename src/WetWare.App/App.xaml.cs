@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WetWare.App.Localization;
 using WetWare.App.Services;
 using WetWare.App.ViewModels;
+using WetWare.App.ViewModels.Course;
 
 namespace WetWare.App;
 
@@ -33,6 +34,10 @@ public partial class App : Application
         services.AddSingleton<RecognitionViewModel>();
         services.AddSingleton<ScenariosViewModel>();
         services.AddSingleton<GlossaryViewModel>();
+        services.AddSingleton<Module6ViewModel>();
+        services.AddSingleton<Module7ViewModel>();
+        services.AddSingleton<Module8ViewModel>();
+        services.AddSingleton<CourseHubViewModel>();
         services.AddSingleton<IEnumerable<PageViewModel>>(sp =>
         [
             sp.GetRequiredService<HomeViewModel>(),
@@ -44,6 +49,11 @@ public partial class App : Application
             sp.GetRequiredService<RecognitionViewModel>(),
             sp.GetRequiredService<ScenariosViewModel>(),
             sp.GetRequiredService<GlossaryViewModel>(),
+            // Course companion (separate section of the rail).
+            sp.GetRequiredService<CourseHubViewModel>(),
+            sp.GetRequiredService<Module6ViewModel>(),
+            sp.GetRequiredService<Module7ViewModel>(),
+            sp.GetRequiredService<Module8ViewModel>(),
         ]);
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainWindow>();
@@ -60,7 +70,7 @@ public partial class App : Application
     }
 
     /// <summary>
-    /// Developer switches: <c>--lang en</c>, <c>--page Network</c>, <c>--scenario Seizure</c>, <c>--train 900</c>, <c>--snapshot out.png [--delay ms]</c>
+    /// Developer switches: <c>--lang en</c>, <c>--page Network</c> (or <c>--page M7/3</c> for a course lesson), <c>--scenario Seizure</c>, <c>--train 900</c>, <c>--snapshot out.png [--delay ms]</c>
     /// (renders the window to a PNG after the delay and exits – used for visual regression checks).
     /// </summary>
     private void ApplyCommandLine(string[] args, MainWindow window)

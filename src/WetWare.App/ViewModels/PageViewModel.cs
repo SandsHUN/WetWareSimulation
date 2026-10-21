@@ -32,14 +32,27 @@ public abstract class PageViewModel : ObservableObject
 
     public string NavTip => Loc[$"Page.{Key}.Tip"];
 
+    /// <summary>Label in the navigation rail (defaults to the page title).</summary>
+    public virtual string NavTitle => Title;
+
+    /// <summary>Navigation rail section: <c>Lab</c> (the simulator) or <c>Course</c> (the course companion).</summary>
+    public virtual string NavGroup => "Lab";
+
+    public string NavGroupTitle => Loc[$"Nav.Group.{NavGroup}"];
+
+    public bool IsCourse => NavGroup == "Course";
+
+    /// <summary>Short badge drawn instead of the glyph in the rail (module number of course pages).</summary>
+    public virtual string? NavBadge => null;
+
     /// <summary>Step-by-step "try this" instructions shown in the guide panel.</summary>
-    public IReadOnlyList<string> GuideSteps =>
+    public virtual IReadOnlyList<string> GuideSteps =>
         Loc[$"Page.{Key}.Guide"].Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
     /// <summary>Plain-language explanation with an everyday analogy, for visitors without a biology background.</summary>
-    public string SimpleTitle => Loc[$"Page.{Key}.SimpleTitle"];
+    public virtual string SimpleTitle => Loc[$"Page.{Key}.SimpleTitle"];
 
-    public string SimpleText => Loc[$"Page.{Key}.Simple"];
+    public virtual string SimpleText => Loc[$"Page.{Key}.Simple"];
 
     public bool IsActive { get; private set; }
 

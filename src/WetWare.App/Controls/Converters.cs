@@ -28,3 +28,25 @@ public sealed class EqualsConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
 }
+
+/// <summary>Visible when the value is a non-empty object or string.</summary>
+public sealed class NotNullToVisibilityConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        value is null || value is string { Length: 0 } ? Visibility.Collapsed : Visibility.Visible;
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+}
+
+/// <summary>
+/// Two-way radio-button binding to a string/enum property: checked when the value equals the parameter;
+/// checking writes the parameter back, unchecking is ignored.
+/// </summary>
+public sealed class ChoiceConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        Equals(value?.ToString(), parameter?.ToString());
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        value is true ? parameter : Binding.DoNothing;
+}

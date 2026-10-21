@@ -69,15 +69,27 @@ public sealed class LocalizationService : INotifyPropertyChanged
         LanguageChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Merges every embedded table of the language: the main <c>Strings/{lang}.json</c> plus the course module
+    /// tables under <c>Strings/Course/*.{lang}.json</c>.
+    /// </summary>
     private static Dictionary<string, string> Load(string language)
     {
         var assembly = Assembly.GetExecutingAssembly();
-        string? name = assembly.GetManifestResourceNames()
-            .FirstOrDefault(n => n.EndsWith($".Strings.{language}.json", StringComparison.OrdinalIgnoreCase));
-        if (name is null) return new();
-        using var stream = assembly.GetManifestResourceStream(name)!;
-        using var reader = new StreamReader(stream);
         var options = new JsonSerializerOptions { ReadCommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true };
-        return JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd(), options) ?? new();
+        var table = new Dictionary<string, string>();
+        var names = assembly.GetManifestResourceNames()
+            .Where(n => n.Contains(".Strings.", StringComparison.OrdinalIgnoreCase)
+                        && n.EndsWith($".{language}.json", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(n => n.Length);
+        foreach (string name in names)
+        {
+            using var stream = assembly.GetManifestResourceStream(name)!;
+            using var reader = new StreamReader(stream);
+            var part = JsonSerializer.Deserialize<Dictionary<string, string>>(reader.ReadToEnd(), options);
+            if (part is null) continue;
+            foreach (var (key, value) in part) table[key] = value;
+        }
+        return table;
     }
 }

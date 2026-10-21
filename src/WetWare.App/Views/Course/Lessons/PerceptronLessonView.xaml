@@ -1,0 +1,76 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.PerceptronLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE81E;" Title="{loc:Tr M8.Perceptron.Data}" Tip="{loc:Tr M8.Perceptron.Data.Tip}" />
+                    <UniformGrid Columns="3">
+                        <RadioButton Style="{StaticResource SegmentItem}" GroupName="Ds" Content="{loc:Tr M8.Perceptron.Ds.Separable}" IsChecked="{Binding Dataset, Converter={StaticResource Choice}, ConverterParameter=Separable}" />
+                        <RadioButton Style="{StaticResource SegmentItem}" GroupName="Ds" Content="AND" IsChecked="{Binding Dataset, Converter={StaticResource Choice}, ConverterParameter=And}" />
+                        <RadioButton Style="{StaticResource SegmentItem}" GroupName="Ds" Content="OR" IsChecked="{Binding Dataset, Converter={StaticResource Choice}, ConverterParameter=Or}" />
+                        <RadioButton Style="{StaticResource SegmentItem}" GroupName="Ds" Content="XOR" IsChecked="{Binding Dataset, Converter={StaticResource Choice}, ConverterParameter=Xor}" />
+                        <RadioButton Style="{StaticResource SegmentItem}" GroupName="Ds" Content="{loc:Tr M8.Perceptron.Ds.Circle}" IsChecked="{Binding Dataset, Converter={StaticResource Choice}, ConverterParameter=Circle}" />
+                        <RadioButton Style="{StaticResource SegmentItem}" GroupName="Ds" Content="{loc:Tr M8.Perceptron.Ds.Moons}" IsChecked="{Binding Dataset, Converter={StaticResource Choice}, ConverterParameter=Moons}" />
+                    </UniformGrid>
+                    <TextBlock Text="{loc:Tr M8.Perceptron.ClickHint}" Style="{StaticResource Muted}" FontSize="12.5" Margin="0,10,0,6" />
+                    <Button Content="{loc:Tr M8.Perceptron.ClearData}" Command="{Binding ClearDataCommand}" HorizontalAlignment="Left" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D5;" Title="{loc:Tr M8.Perceptron.Model}" Tip="{loc:Tr M8.Perceptron.Model.Tip}" />
+                    <Border Style="{StaticResource SegmentHost}" HorizontalAlignment="Left" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="Model" Content="{loc:Tr M8.Perceptron.Single}" IsChecked="{Binding Model, Converter={StaticResource Choice}, ConverterParameter=Perceptron}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" GroupName="Model" Content="{loc:Tr M8.Perceptron.Mlp}" IsChecked="{Binding Model, Converter={StaticResource Choice}, ConverterParameter=Mlp}" />
+                        </StackPanel>
+                    </Border>
+                    <c:ParamSlider Label="{loc:Tr M8.Perceptron.Rate}" Value="{Binding LearningRate}" Minimum="0.01" Maximum="2" Step="0.01" Decimals="2" />
+                    <StackPanel Visibility="{Binding UsesMlp, Converter={StaticResource BoolToVisibility}}">
+                        <c:ParamSlider Label="{loc:Tr M8.Perceptron.Hidden}" Tip="{loc:Tr M8.Perceptron.Hidden.Tip}" Value="{Binding Hidden}" Minimum="1" Maximum="10" Step="1" Decimals="0" />
+                        <c:ParamSlider Label="β (sigmoid)" Tip="{loc:Tr M8.Perceptron.Beta.Tip}" Value="{Binding Beta}" Minimum="0.3" Maximum="6" Step="0.1" Decimals="1" />
+                        <sp:WpfPlot x:Name="SigmoidPlot" Height="120" />
+                    </StackPanel>
+                    <WrapPanel Margin="0,8,0,0">
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding ToggleRunCommand}" Margin="0,0,6,6">
+                            <TextBlock Text="{loc:Tr M8.Perceptron.Train}" />
+                        </Button>
+                        <Button Content="{loc:Tr Course.Step}" Command="{Binding StepOnceCommand}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ResetCommand}" ToolTip="{loc:Tr M8.Perceptron.Reset.Tip}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE7B3;" Title="{loc:Tr M8.Perceptron.Plane}" Tip="{loc:Tr M8.Perceptron.Plane.Tip}" />
+                    <cc:PlaneCanvas x:Name="Plane" Height="420" Cursor="Cross" />
+                    <TextBlock Text="{Binding Readout}" Style="{StaticResource Readout}" />
+                    <Border Style="{StaticResource LiveExplain}">
+                        <TextBlock Text="{Binding Explain}" Style="{StaticResource Body}" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M8.Perceptron.Curve}" Tip="{loc:Tr M8.Perceptron.Curve.Tip}" />
+                    <sp:WpfPlot x:Name="CurvePlot" Height="180" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</l:LessonView>

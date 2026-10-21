@@ -13,7 +13,7 @@
     <Authors>Arthelais Labs LLC</Authors>
     <Copyright>© 2026 Arthelais Labs LLC</Copyright>
     <!-- Major.minor; the third part is the build number from build.number, incremented on every build. -->
-    <VersionBase>1.0</VersionBase>
+    <VersionBase>1.1</VersionBase>
     <BuildNumberFile>$(MSBuildThisFileDirectory)build.number</BuildNumberFile>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -33,7 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Localization\Strings\*.json" />
+    <!-- WithCulture=false: "*.hu.json" must stay in the main assembly, not become a satellite resource. -->
+    <EmbeddedResource Include="Localization\Strings\**\*.json" WithCulture="false" />
     <Resource Include="Assets\app.ico" />
   </ItemGroup>
 

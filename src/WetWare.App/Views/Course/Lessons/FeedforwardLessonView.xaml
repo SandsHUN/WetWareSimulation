@@ -1,0 +1,77 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.FeedforwardLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M6.Feedforward.Input}" Tip="{loc:Tr M6.Feedforward.Input.Tip}" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Feedforward.Profile.Step}" Command="{Binding SetProfileCommand}" CommandParameter="Step" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Feedforward.Profile.Bar}" Command="{Binding SetProfileCommand}" CommandParameter="Bar" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Feedforward.Profile.Staircase}" Command="{Binding SetProfileCommand}" CommandParameter="Staircase" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Feedforward.Profile.Smooth}" Command="{Binding SetProfileCommand}" CommandParameter="Smooth" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Feedforward.Profile.NoisyBar}" Command="{Binding SetProfileCommand}" CommandParameter="NoisyBar" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE71C;" Title="{loc:Tr M6.Feedforward.Kernel}" Tip="{loc:Tr M6.Feedforward.Kernel.Tip}" />
+                    <Border Style="{StaticResource SegmentHost}" HorizontalAlignment="Left">
+                        <UniformGrid Columns="2">
+                            <RadioButton Style="{StaticResource SegmentItem}" Content="{loc:Tr M6.Feedforward.K.Derivative}" GroupName="Kernel" IsChecked="{Binding Kernel, Converter={StaticResource Choice}, ConverterParameter=Derivative}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" Content="{loc:Tr M6.Feedforward.K.CenterSurround}" GroupName="Kernel" IsChecked="{Binding Kernel, Converter={StaticResource Choice}, ConverterParameter=CenterSurround}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" Content="{loc:Tr M6.Feedforward.K.Smoothing}" GroupName="Kernel" IsChecked="{Binding Kernel, Converter={StaticResource Choice}, ConverterParameter=Smoothing}" />
+                            <RadioButton Style="{StaticResource SegmentItem}" Content="{loc:Tr M6.Feedforward.K.Identity}" GroupName="Kernel" IsChecked="{Binding Kernel, Converter={StaticResource Choice}, ConverterParameter=Identity}" />
+                        </UniformGrid>
+                    </Border>
+                    <Border Style="{StaticResource FormulaBox}" Margin="0,12,0,0">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Tr M6.Feedforward.RowOfW}" Style="{StaticResource Caption}" FontWeight="Normal" />
+                            <TextBlock Text="{Binding Taps}" Style="{StaticResource FormulaText}" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource LiveExplain}" Margin="0,4,0,0">
+                        <TextBlock Text="{Binding Explain}" Style="{StaticResource Body}" />
+                    </Border>
+                    <Button Content="{loc:Tr M6.Feedforward.Restart}" ToolTip="{loc:Tr M6.Feedforward.Restart.Tip}" Command="{Binding RestartCommand}" Margin="0,10,0,0" HorizontalAlignment="Left" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE80A;" Title="{loc:Tr M6.Feedforward.Matrix}" Tip="{loc:Tr M6.Feedforward.Matrix.Tip}" />
+                    <cc:MatrixView x:Name="Matrix" Height="250" SquareCells="True" Caption="j (u)" RowCaption="i (v)" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE8F4;" Title="{loc:Tr M6.Feedforward.Network}" Tip="{loc:Tr M6.Feedforward.Network.Tip}" />
+                    <Border Style="{StaticResource InsetPanel}" Padding="4">
+                        <cc:LayerDiagram x:Name="Diagram" Height="190" />
+                    </Border>
+                    <TextBlock Text="{Binding Computation}" Style="{StaticResource Readout}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M6.Feedforward.Profiles}" Tip="{loc:Tr M6.Feedforward.Profiles.Tip}" />
+                    <sp:WpfPlot x:Name="ProfilePlot" Height="320" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</l:LessonView>

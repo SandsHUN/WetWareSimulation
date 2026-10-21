@@ -1,0 +1,82 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.OscillationLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE945;" Title="{loc:Tr Common.Examples}" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Oscillation.Preset.Damped}" Command="{Binding PresetCommand}" CommandParameter="Damped" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Oscillation.Preset.Critical}" Command="{Binding PresetCommand}" CommandParameter="Critical" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M6.Oscillation.Preset.Cycle}" Command="{Binding PresetCommand}" CommandParameter="Cycle" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9E9;" Title="{loc:Tr M6.Oscillation.Params}" Tip="{loc:Tr M6.Oscillation.Params.Tip}" />
+                    <c:ParamSlider Label="τ_I" Tip="{loc:Tr M6.Oscillation.TauI.Tip}" Value="{Binding TauI}" Minimum="10" Maximum="80" Step="1" Unit="ms" Decimals="0" />
+                    <c:ParamSlider Label="M_EE" Tip="{loc:Tr M6.Oscillation.Mee.Tip}" Value="{Binding Mee}" Minimum="0.5" Maximum="2" Step="0.05" Decimals="2" />
+                    <Border Style="{StaticResource FormulaBox}" Margin="0,8,0,0">
+                        <TextBlock Text="{Binding EigenText}" Style="{StaticResource FormulaText}" FontSize="14" />
+                    </Border>
+                    <Border Style="{StaticResource LiveExplain}" Margin="0,2,0,0">
+                        <TextBlock Text="{Binding Verdict}" Style="{StaticResource Body}" />
+                    </Border>
+                    <WrapPanel Margin="0,10,0,0">
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding ToggleRunCommand}" Margin="0,0,6,6">
+                            <TextBlock Text="{loc:Tr Course.RunPause}" />
+                        </Button>
+                        <Button Content="{loc:Tr M6.Oscillation.Kick}" ToolTip="{loc:Tr M6.Oscillation.Kick.Tip}" Command="{Binding KickCommand}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE8EF;" Title="{loc:Tr M6.Oscillation.Spectrum}" Tip="{loc:Tr M6.Oscillation.Spectrum.Tip}" />
+                    <sp:WpfPlot x:Name="EigenPlot" Height="230" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE81E;" Title="{loc:Tr M6.Oscillation.Phase}" Tip="{loc:Tr M6.Oscillation.Phase.Tip}" />
+                    <cc:PlaneCanvas x:Name="Plane" Height="380" Cursor="Cross" />
+                    <WrapPanel Margin="0,8,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+                            <Rectangle Width="16" Height="3" Fill="{StaticResource SuccessBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="{loc:Tr M6.Oscillation.NullE}" Style="{StaticResource Caption}" FontWeight="Normal" Margin="6,0,0,0" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+                            <Rectangle Width="16" Height="3" Fill="{StaticResource Accent2Brush}" VerticalAlignment="Center" />
+                            <TextBlock Text="{loc:Tr M6.Oscillation.NullI}" Style="{StaticResource Caption}" FontWeight="Normal" Margin="6,0,0,0" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle Width="16" Height="3" Fill="{StaticResource WarningBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="{loc:Tr M6.Oscillation.Trajectory}" Style="{StaticResource Caption}" FontWeight="Normal" Margin="6,0,0,0" />
+                        </StackPanel>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D9;" Title="{loc:Tr M6.Oscillation.Traces}" />
+                    <sp:WpfPlot x:Name="TracePlot" Height="200" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</l:LessonView>

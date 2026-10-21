@@ -1,0 +1,70 @@
+<l:LessonView x:Class="WetWare.App.Views.Course.Lessons.TdLessonView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:l="clr-namespace:WetWare.App.Views.Course.Lessons"
+              xmlns:loc="clr-namespace:WetWare.App.Localization"
+              xmlns:c="clr-namespace:WetWare.App.Controls"
+              xmlns:cc="clr-namespace:WetWare.App.Controls.Course"
+              xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE916;" Title="{loc:Tr M8.Td.Protocol}" Tip="{loc:Tr M8.Td.Protocol.Tip}" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource PrimaryButton}" Command="{Binding ToggleRunCommand}" Margin="0,0,6,6">
+                            <TextBlock Text="{loc:Tr M8.Td.Auto}" />
+                        </Button>
+                        <Button Content="{loc:Tr M8.Td.Trial}" Command="{Binding TrialCommand}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource IconButton}" Content="&#xE72C;" Command="{Binding ResetCommand}" ToolTip="{loc:Tr Common.Reset.Tip}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                    <TextBlock Text="{loc:Tr M8.Td.Probes}" Style="{StaticResource Caption}" Margin="0,8,0,6" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M8.Td.Omission}" ToolTip="{loc:Tr M8.Td.Omission.Tip}" Command="{Binding OmissionCommand}" />
+                        <Button Style="{StaticResource ChipButton}" Content="{loc:Tr M8.Td.RewardOnly}" ToolTip="{loc:Tr M8.Td.RewardOnly.Tip}" Command="{Binding RewardOnlyCommand}" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9E9;" Title="{loc:Tr M8.Td.Params}" />
+                    <c:ParamSlider Label="{loc:Tr M8.Td.RewardTime}" Tip="{loc:Tr M8.Td.RewardTime.Tip}" Value="{Binding RewardTime}" Minimum="25" Maximum="75" Step="1" Decimals="0" />
+                    <c:ParamSlider Label="{loc:Tr M8.Td.Probability}" Tip="{loc:Tr M8.Td.Probability.Tip}" Value="{Binding RewardProbability}" Minimum="0" Maximum="1" Step="0.05" Decimals="2" />
+                    <c:ParamSlider Label="ε" Tip="{loc:Tr M8.Td.Epsilon.Tip}" Value="{Binding LearningRate}" Minimum="0.02" Maximum="0.6" Step="0.01" Decimals="2" />
+                    <c:ParamSlider Label="γ" Tip="{loc:Tr M8.Td.Gamma.Tip}" Value="{Binding Gamma}" Minimum="0.8" Maximum="1" Step="0.01" Decimals="2" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE80A;" Title="{loc:Tr M8.Td.Heatmap}" Tip="{loc:Tr M8.Td.Heatmap.Tip}" />
+                    <cc:MatrixView x:Name="Heatmap" Height="240" Caption="t →" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D9;" Title="{loc:Tr M8.Td.LastTrial}" Tip="{loc:Tr M8.Td.LastTrial.Tip}" />
+                    <sp:WpfPlot x:Name="ValuePlot" Height="170" />
+                    <sp:WpfPlot x:Name="DopaminePlot" Height="190" />
+                    <TextBlock Text="{Binding Readout}" Style="{StaticResource Readout}" />
+                    <Border Style="{StaticResource LiveExplain}">
+                        <TextBlock Text="{Binding Explain}" Style="{StaticResource Body}" />
+                    </Border>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <c:SectionHeader Glyph="&#xE9D2;" Title="{loc:Tr M8.Td.Shift}" Tip="{loc:Tr M8.Td.Shift.Tip}" />
+                    <sp:WpfPlot x:Name="ShiftPlot" Height="190" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</l:LessonView>
