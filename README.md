@@ -15,11 +15,21 @@ It is built for teaching and demonstration: every control has a tooltip, every p
 
 📖 **New here? Read the [User Guide](docs/USER_GUIDE.md)** ([magyarul](docs/USER_GUIDE.hu.md)) – a page-by-page tour of what you see on screen, what to try and what it teaches.
 
-## Download
+## Download & install
 
-Grab `WetWareLab.exe` from the [latest release](https://github.com/SandsHUN/WetWareSimulation/releases/latest). It is a single self-contained file – no installation and no .NET runtime required (Windows 10/11, 64-bit).
+### ⬇️ [Download WetWareLab.exe (latest version)](https://github.com/SandsHUN/WetWareSimulation/releases/latest/download/WetWareLab.exe)
 
-> The executable is not code-signed, so Windows SmartScreen may warn on first launch: click **More info → Run anyway**.
+Requirements: Windows 10 or 11, 64-bit. Nothing else – the .NET runtime and every library are packed into the single file. All releases and their notes: [Releases page](https://github.com/SandsHUN/WetWareSimulation/releases).
+
+**Installing takes three steps:**
+
+1. **Download** `WetWareLab.exe` with the link above (about 75 MB).
+2. **Put it anywhere** – e.g. create a `WetWare Lab` folder in *Documents* or on the Desktop and move the file there. No installer, no admin rights; to "uninstall", simply delete the file.
+3. **Start it** with a double-click. On the first launch Windows SmartScreen may show *"Windows protected your PC"* because the file is not code-signed: click **More info → Run anyway**. Windows remembers this, the warning does not come back.
+
+Optional: right-click the file → *Show more options* → **Send to → Desktop (create shortcut)** for a desktop icon, or **Pin to Start**.
+
+Your settings (language, panels) are stored in `%AppData%\WetWareLab\settings.json`. To update, download the new version and replace the old file.
 
 ## What's inside
 

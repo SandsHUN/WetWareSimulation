@@ -8,9 +8,21 @@
 
 📖 **Most ismerkedsz vele? Olvasd el a [Felhasználói útmutatót](docs/USER_GUIDE.hu.md)** ([English](docs/USER_GUIDE.md)) – oldalanként bemutatja, mit látsz a képernyőn, mit érdemes kipróbálni, és mit tanulhatsz belőle.
 
-## Letöltés
+## Letöltés és telepítés
 
-A `WetWareLab.exe` a [legfrissebb kiadásból](https://github.com/SandsHUN/WetWareSimulation/releases/latest) tölthető le: egyetlen fájl, telepítés és .NET futtatókörnyezet nélkül fut (Windows 10/11, 64 bit). Mivel nincs digitálisan aláírva, első indításkor a SmartScreen figyelmeztethet: „További információ” → „Futtatás mindenképp”.
+### ⬇️ [WetWareLab.exe letöltése (legfrissebb verzió)](https://github.com/SandsHUN/WetWareSimulation/releases/latest/download/WetWareLab.exe)
+
+Követelmény: Windows 10 vagy 11, 64 bites. Más nem kell – a .NET futtatókörnyezet és minden könyvtár benne van az egyetlen fájlban. Az összes kiadás és leírásuk: [Kiadások oldal](https://github.com/SandsHUN/WetWareSimulation/releases).
+
+**A telepítés három lépés:**
+
+1. **Töltsd le** a `WetWareLab.exe`-t a fenti linkkel (kb. 75 MB).
+2. **Tedd bárhová** – például hozz létre egy `WetWare Lab` mappát a *Dokumentumok* között vagy az Asztalon, és másold bele. Nincs telepítő, nem kell rendszergazdai jog; „eltávolításhoz” egyszerűen töröld a fájlt.
+3. **Indítsd el** dupla kattintással. Első indításkor a Windows SmartScreen kiírhatja: *„A Windows megvédte a számítógépet”*, mert a fájl nincs digitálisan aláírva. Kattints a **További információ → Futtatás mindenképp** gombra. A Windows ezt megjegyzi, a figyelmeztetés nem jön újra.
+
+Opcionálisan: jobb klikk a fájlon → *További lehetőségek* → **Küldés → Asztal (parancsikon létrehozása)**, vagy **Rögzítés a Start menüben**.
+
+A beállítások (nyelv, panelek) a `%AppData%\WetWareLab\settings.json` fájlban tárolódnak. Frissítéshez töltsd le az új verziót, és cseréld le vele a régi fájlt.
 
 Modern, kétnyelvű (magyar / angol) WPF oktatóalkalmazás a biológiai számítás (wetware / neuromorf számítástechnika) szemléltetésére. A specifikáció: [Specifications/wetware_specifications.md](Specifications/wetware_specifications.md).
 
